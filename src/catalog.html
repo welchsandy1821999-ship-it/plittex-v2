@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Полный Каталог Тротуарной Плитки | ПЛИТТЕКС</title>
+    <meta name="description"
+        content="Каталог тротуарной плитки, бордюров и блоков. Актуальные цены, наличие, калькулятор стоимости и веса.">
+    <link rel="canonical" href="https://plittex.ru/catalog.html">
+
+    <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/img/favicon.ico" type="image/x-icon">
+
+    <meta property="og:title" content="ПЛИТТЕКС — Завод тротуарной плитки">
+    <meta property="og:description"
+        content="Европейское качество, гарантия 10 лет. Собственное производство в Новокубанске.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://plittex.ru/catalog.html">
+    <meta property="og:image" content="assets/img/hero-bg.jpg">
+
+    <link rel="preload" href="./assets/fonts/Montserrat-Black.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-ExtraBold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-Medium.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+
+    <link rel="stylesheet" href="./styles/main.scss">
+
+    <script src="https://unpkg.com/imask" defer></script>
+    <script type="module" src="./scripts/main.js"></script>
+
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "ПЛИТТЕКС — Завод тротуарной плитки",
+        "image": "https://plittex.ru/assets/img/hero-bg.jpg",
+        "telephone": "+7-988-888-05-06",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Новокубанск",
+          "addressCountry": "RU"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Каталог тротуарной плитки ПЛИТТЕКС",
+        "description": "Тротуарная плитка, бордюры и строительные блоки от производителя в Новокубанске.",
+        "url": "https://plittex.ru/catalog.html",
+        "numberOfItems": "30"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [{
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Главная",
+          "item": "https://plittex.ru/"
+        },{
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Каталог",
+          "item": "https://plittex.ru/catalog.html"
+        }]
+      }
+    ]
+    </script>
+</head>
+
+<body>
+    <div id="toast-container"></div>
+
+    {{> header }}
+
+    <main>
+        <section class="page-header">
+            <div class="page-header-bg"></div>
+            <div class="hero__overlay"></div>
+            <div class="container" style="position: relative; z-index: 2;">
+                <h1 class="hero__title">Каталог Продукции</h1>
+                <p class="hero__subtitle">Официальные цены завода от 01.02.2025</p>
+                <div style="margin-top:20px;">
+                    <a href="assets/docs/Price.pdf" target="_blank" class="btn btn--primary">📄 Скачать Прайс-лист</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-padding">
+            <div class="container">
+                <div class="catalog-controls">
+                    <div class="container">
+                        <div class="controls-row">
+                            <div class="search-wrapper" style="margin:0; flex-grow:1;">
+                                <svg class="search-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                                <input type="text" id="searchInput" class="search-input"
+                                    placeholder="Поиск (Например: Квадрат, Бордюр...)">
+                                <div id="searchDropdown" class="search-dropdown"></div>
+                            </div>
+
+                            <div class="sort-wrapper">
+                                <span class="sort-label">Сортировать:</span>
+                                <select id="sortSelect" class="sort-select">
+                                    <option value="default">По популярности</option>
+                                    <option value="price_asc">Сначала дешевле</option>
+                                    <option value="price_desc">Сначала дороже</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="catalog-filters">
+                            <button class="filter-btn active" data-cat="all">Все товары</button>
+                            <button class="filter-btn" data-cat="standart">Гладкая</button>
+                            <button class="filter-btn" data-cat="granit">Гранит</button>
+                            <button class="filter-btn" data-cat="melange-sm">Меланж гладкий</button>
+                            <button class="filter-btn" data-cat="melange-gr">Меланж гранит</button>
+                            <button class="filter-btn" data-cat="road">Дорожные</button>
+                            <button class="filter-btn" data-cat="blocks">Блоки</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="catalog-root"></div>
+            </div>
+        </section>
+
+        <section class="section-padding bg-light">
+            <div class="container">
+                <div
+                    style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:40px; flex-wrap: wrap; gap: 15px;">
+                    <h2 class="section-title text-dark" style="font-size:32px; margin:0;">Отзывы наших клиентов</h2>
+                    <button class="btn btn--primary js-open-review">Написать отзыв</button>
+                </div>
+
+                <div class="reviews-grid" id="visible-reviews"></div>
+
+                <div class="reviews-hidden" id="hiddenReviews"></div>
+
+                <div class="text-center" style="margin-top: 40px;">
+                    <button class="btn btn--secondary" id="btnToggleReviews">Показать все отзывы</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="partners-cta-section">
+            <div class="container">
+                <div class="partners-grid">
+                    <div class="partners-info">
+                        <h2 class="partners-title">Не нашли что искали?</h2>
+                        <p class="partners-desc">
+                            Мы можем изготовить плитку индивидуального цвета или фактуры под ваш проект.
+                            Закажите <strong>бесплатную консультацию</strong> технолога.
+                        </p>
+                        <ul class="partners-list">
+                            <li><span class="check-icon">✓</span><span>Подбор уникальных цветов</span></li>
+                            <li><span class="check-icon">✓</span><span>Расчет нагрузок</span></li>
+                            <li><span class="check-icon">✓</span><span>Образцы на объект</span></li>
+                        </ul>
+                    </div>
+                    <div class="partners-form-card">
+                        <h3>Заказать консультацию</h3>
+                        <p class="form-subtitle">Оставьте номер, мы перезвоним</p>
+                        <form id="consultForm">
+                            <input type="text" name="antispam" style="display:none !important;" tabindex="-1">
+                            <input type="hidden" name="form_subject" value="Консультация из каталога">
+
+                            <input type="text" name="name" placeholder="Ваше Имя" class="input-field" required>
+                            <input type="tel" name="phone" placeholder="Телефон" class="input-field" required>
+
+                            <button type="submit" class="btn btn--primary full-width">Отправить заявку</button>
+                            <p class="policy-small">Нажимая кнопку, вы соглашаетесь с <a href="policy.html"
+                                    target="_blank">политикой конфиденциальности</a>.</p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    {{> footer }}
+    {{> modals }}
+
+</body>
+
+</html>

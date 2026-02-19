@@ -1,0 +1,3 @@
+rampf.jpg, season2020.jpg, park.jpg, water.jpg, director.jpg, award1.jpg, logo_kuban.jpg, cert_gost.jpg, agree.jpg.
+
+что еще можно сделать с этой страницей? Еще идею по заполнению, по дизайну. Проверка на ошибки, Валидацию, SEO?

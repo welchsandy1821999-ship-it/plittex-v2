@@ -1,0 +1,167 @@
+<div class="modal" id="calcModal">
+    <div class="modal-overlay js-close-calc"></div>
+    <div class="modal-container">
+        <button class="modal-close js-close-calc">×</button>
+        <div class="modal-header">
+            <h3>Добавить в заказ</h3>
+        </div>
+        <div class="modal-body" style="padding-bottom:10px;">
+            <div class="calc-box" id="calcBox">
+                <h4 id="calcProdTitle" style="margin-bottom:15px; color:#333;">Название товара</h4>
+                <div class="calc-inputs-row">
+                    <div class="input-group">
+                        <label style="font-size:12px; font-weight:600; margin-bottom:5px; display:block;">Цвет:</label>
+                        <select id="calcColorSelect" class="input-field" onchange="window.updateCalcPreview()"></select>
+                    </div>
+                    <div class="input-group">
+                        <label
+                            style="font-size:12px; font-weight:600; margin-bottom:5px; display:block;">Кол-во:</label>
+                        <input type="number" id="calcQty" class="input-field" placeholder="0"
+                            oninput="window.updateCalcPreview()">
+                    </div>
+                </div>
+                <div id="liveCalcPreview" class="calc-preview" style="display:none;">
+                    <span>Сумма: <strong id="liveSum">0 ₽</strong></span>
+                    <span>Вес: <strong id="liveWeight">0 кг</strong></span>
+                </div>
+
+                <button class="btn btn--primary full-width" onclick="window.confirmCalcAddToCart()">В корзину</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cart-overlay" id="cartOverlay" onclick="window.toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+    <div class="cart-drawer__header">
+        <h3>КОРЗИНА <span id="cartHeaderQty" style="font-weight:400; color:#777;">(0)</span></h3>
+        <button class="cart-drawer__close" onclick="window.toggleCart()">×</button>
+    </div>
+    <div class="cart-drawer__body">
+        <div id="cartItems"></div>
+        <div class="cart-bottom-wrapper">
+            <div class="cart-summary-block">
+                <div class="sum-row"><span>Общее кол-во:</span> <strong id="cartTotalQty">0</strong></div>
+                <div class="sum-row"><span>Вес:</span> <strong id="cartTotalWeight">0 кг</strong></div>
+                <div class="sum-row"><span>Поддоны:</span> <strong id="cartTotalPallets"
+                        style="color:var(--primary-color);">0</strong></div>
+            </div>
+            <div class="cart-total-row"><span>Итого:</span><span id="cartTotalSum">0 ₽</span></div>
+            <form id="orderForm" class="drawer-form">
+                <input type="text" name="antispam" value="" style="display:none !important;" tabindex="-1"
+                    autocomplete="off">
+                <input type="hidden" name="form_subject" value="Заказ из корзины">
+                <input type="hidden" name="orderData" id="orderDataField">
+                <input type="text" name="name" placeholder="Ваше Имя" class="input-field" required>
+                <input type="tel" name="phone" placeholder="Телефон" class="input-field" required>
+                <button type="submit" class="btn-submit-order">ОФОРМИТЬ ЗАЯВКУ</button>
+                <p class="policy-small">Нажимая кнопку, вы соглашаетесь с <a href="policy.html"
+                        target="_blank">политикой конфиденциальности</a>.</p>
+            </form>
+            <a href="catalog.html" class="btn-to-catalog">❮ ПЕРЕЙТИ В КАТАЛОГ</a>
+            <button class="btn-clear-cart" onclick="window.clearCart()">Очистить корзину</button>
+        </div>
+    </div>
+</div>
+
+<div class="sticky-cart" id="stickyCart" onclick="window.toggleCart()">
+    <div class="sc-icon-box">
+        <svg width="22" height="22" fill="white" viewBox="0 0 24 24">
+            <path
+                d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" />
+        </svg>
+        <span class="sc-badge" id="scCount">0</span>
+    </div>
+    <div class="sc-separator"></div>
+    <span class="sc-total-price" id="scTotal">0 ₽</span>
+</div>
+
+<div class="modal" id="callbackModal">
+    <div class="modal-overlay js-close-modal"></div>
+    <div class="modal-container">
+        <button class="modal-close js-close-modal">×</button>
+        <div class="modal-header">
+            <h3>Заказать звонок</h3>
+        </div>
+        <div class="modal-body">
+            <form id="modalForm">
+                <input type="text" name="antispam" value="" style="display:none !important;" tabindex="-1"
+                    autocomplete="off">
+                <input type="hidden" name="form_subject" id="modalSubjectField" value="Заказ звонка">
+                <input type="text" name="name" placeholder="Ваше Имя" class="input-field" required>
+                <input type="tel" name="phone" placeholder="Телефон" class="input-field" required>
+                <button type="submit" class="btn btn--primary full-width">Перезвоните мне</button>
+                <p class="policy-text">Нажимая кнопку, вы соглашаетесь с <a href="policy.html" target="_blank">политикой
+                        конфиденциальности</a>.</p>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="reviewModal">
+    <div class="modal-overlay js-close-modal"></div>
+    <div class="modal-container">
+        <button class="modal-close js-close-modal">×</button>
+        <div class="modal-header">
+            <h3>Написать отзыв</h3>
+        </div>
+        <form id="reviewForm" class="form-white-box" style="padding:0; box-shadow:none;">
+            <input type="hidden" name="subject" value="Новый отзыв с сайта">
+            <input type="text" name="name" class="input-field" placeholder="Ваше имя" required>
+            <input type="tel" name="phone" class="input-field" placeholder="Ваш телефон" required>
+            <div style="text-align: center; margin-bottom: 15px;">
+                <span style="font-size: 14px; color: #666; display:block; margin-bottom:5px;">Ваша оценка:</span>
+                <div class="star-rating">
+                    <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 звезд">★</label>
+                    <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 звезды">★</label>
+                    <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 звезды">★</label>
+                    <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 звезды">★</label>
+                    <input type="radio" id="star1" name="rating" value="1" checked><label for="star1"
+                        title="1 звезда">★</label>
+                </div>
+            </div>
+            <textarea name="message" class="input-field" placeholder="Текст отзыва..." rows="4" required></textarea>
+            <p class="policy-small" style="margin-top:0; margin-bottom:15px;">Отправляя данные, вы соглашаетесь с <a
+                    href="policy.html" target="_blank">политикой конфиденциальности</a>.</p>
+            <button type="submit" class="btn btn--primary" style="width:100%;">Отправить отзыв</button>
+        </form>
+    </div>
+</div>
+
+<div id="lightbox-overlay" class="lightbox">
+    <span class="lightbox-close js-close-modal">×</span>
+    <img id="lightbox-img" class="lightbox-img"
+        src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt=""
+        onerror="window.handleImgError(this)">
+    <div id="lightbox-caption" class="lightbox-caption"></div>
+</div>
+
+<div class="modal" id="newsModal">
+    <div class="modal-overlay js-close-news"></div>
+    <div class="modal-container news-modal-container">
+        <button class="modal-close js-close-news">×</button>
+        <div class="modal-body">
+            <div class="news-modal-img-wrap" onclick="window.openCert(this)" style="cursor: zoom-in;">
+                <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"
+                    class="news-modal-img" id="newsModalImg" onerror="window.handleImgError(this)"
+                    style="width:100%; border-radius:12px; margin-bottom:20px;">
+            </div>
+
+            <div class="news-modal-meta">
+                <span class="news-modal-date" id="newsModalDate"
+                    style="color: #888; font-size: 14px; font-weight: 600;"></span>
+            </div>
+
+            <h3 id="newsModalTitle" class="text-dark"
+                style="font-size:24px; margin-bottom:20px; font-weight: 800; line-height: 1.3;"></h3>
+            <div class="news-modal-body" id="newsModalBody" style="line-height:1.7; color:#555; font-size: 16px;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="scroll-top" id="scrollTopBtn">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z" />
+    </svg>
+</div>

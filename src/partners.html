@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Партнерам | Сотрудничество с заводом ПЛИТТЕКС</title>
+    <meta name="description"
+        content="Выгодные условия сотрудничества для дилеров, застройщиков и укладчиков в ЮФО. Оптовые цены, маржа до 20%, наличие 50 000 м² на складе.">
+
+    <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
+
+    <link rel="preload" href="./assets/fonts/Montserrat-Black.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-ExtraBold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-Medium.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+
+    <link rel="stylesheet" href="./styles/main.scss">
+
+    <script src="https://unpkg.com/imask" defer></script>
+    <script type="module" src="./scripts/main.js"></script>
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Главная",
+        "item": "https://plittex.ru/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Партнерам",
+        "item": "https://plittex.ru/partners.html"
+      }]
+    }
+    </script>
+</head>
+
+<body>
+
+    <div id="toast-container"></div>
+
+    {{> header }}
+
+    <main>
+        <section class="page-header" style="background-image: url('assets/img/hero-bg.jpg');">
+            <div class="page-header-bg"></div>
+            <div class="hero__overlay"></div>
+            <div class="container" style="position: relative; z-index: 2;">
+                <h1 class="hero__title">Сотрудничество</h1>
+                <p class="hero__subtitle">Выгодные условия для дилеров, строителей и архитекторов Южного Федерального
+                    Округа</p>
+            </div>
+        </section>
+
+        <section class="section-padding">
+            <div class="container">
+                <h2 class="text-center" style="margin-bottom: 50px; font-size: 32px; color: var(--dark-color);">Рады
+                    нашему сотрудничеству</h2>
+                <div class="partner-types">
+                    <div class="p-card" data-aos="fade-up">
+                        <div class="p-icon">🏪</div>
+                        <h3>Дилеры и Стройбазы</h3>
+                        <ul class="p-list">
+                            <li>Специальный оптовый прайс (маржа до 20%)</li>
+                            <li>Бесплатные выставочные стенды и образцы</li>
+                            <li>Помощь в логистике и доставке</li>
+                            <li>Приоритетная отгрузка в сезон</li>
+                        </ul>
+                    </div>
+
+                    <div class="p-card highlighted" data-aos="fade-up" data-aos-delay="100">
+                        <div class="p-icon">🏗️</div>
+                        <h3>Застройщики и Подрядчики</h3>
+                        <ul class="p-list">
+                            <li>Фиксация цены на весь период строительства</li>
+                            <li>Производство больших объемов в сжатые сроки</li>
+                            <li>Полный пакет документов (ГОСТ 17608-2017)</li>
+                            <li>Работа с НДС, любая форма оплаты</li>
+                        </ul>
+                    </div>
+
+                    <div class="p-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="p-icon">👷</div>
+                        <h3>Бригады укладчиков</h3>
+                        <ul class="p-list">
+                            <li>Агентское вознаграждение с каждого заказа</li>
+                            <li>Гарантия качества (не будет стыдно за плитку)</li>
+                            <li>Рекомендуем вас нашим частным клиентам</li>
+                            <li>Предоставляем образцы для ваших заказчиков</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-padding bg-light">
+            <div class="container">
+                <h2 class="text-center" style="margin-bottom: 50px; font-size: 32px; color: var(--dark-color);">Почему с
+                    нами выгодно</h2>
+                <div class="benefits-grid">
+                    <div class="b-card" data-aos="fade-up">
+                        <div class="b-num">01</div>
+                        <div class="b-icon-wrap">📈</div>
+                        <div class="b-content-align">
+                            <h3>Высокая Маржинальность</h3>
+                            <p>Наша система скидок позволяет дилерам зарабатывать до 20% с каждого заказа. Мы строим
+                                честные отношения.</p>
+                        </div>
+                    </div>
+
+                    <div class="b-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="b-num">02</div>
+                        <div class="b-icon-wrap">🚛</div>
+                        <div class="b-content-align">
+                            <h3>Своя Логистика</h3>
+                            <p>Организуем доставку манипуляторами или длинномерами в любую точку ЮФО точно в срок.</p>
+                        </div>
+                    </div>
+
+                    <div class="b-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="b-num">03</div>
+                        <div class="b-icon-wrap">🏭</div>
+                        <div class="b-content-align">
+                            <h3>Товар в Наличии</h3>
+                            <p>Поддерживаем постоянный складской запас популярных позиций (более 50 000 м²).</p>
+                        </div>
+                    </div>
+
+                    <div class="b-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="b-num">04</div>
+                        <div class="b-icon-wrap">📚</div>
+                        <div class="b-content-align">
+                            <h3>Маркетинг и Образцы</h3>
+                            <p>Бесплатно предоставляем фирменные стенды, планшеты с образцами плитки («книжки») и
+                                каталоги.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-padding">
+            <div class="container">
+                <div class="about-split" style="align-items: center;">
+                    <div class="about-media">
+                        <img src="assets/img/production.jpg" alt="География поставок"
+                            style="border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    </div>
+                    <div class="about-text" data-aos="fade-left">
+                        <h2 style="font-size: 32px; color: var(--dark-color); margin-bottom: 20px;">Работаем по всему
+                            ЮФО</h2>
+                        <p style="margin-bottom: 20px; font-size: 16px; color: #555;">Налаженная система логистики
+                            позволяет нам обеспечивать бесперебойные поставки в Краснодарский край, Ставропольский край,
+                            Ростовскую область и республики Кавказа.</p>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div style="font-weight: 700; color: var(--primary-color);">• Краснодар</div>
+                            <div style="font-weight: 700; color: var(--primary-color);">• Ростов-на-Дону</div>
+                            <div style="font-weight: 700; color: var(--primary-color);">• Ставрополь</div>
+                            <div style="font-weight: 700; color: var(--primary-color);">• Армавир</div>
+                            <div style="font-weight: 700; color: var(--primary-color);">• Пятигорск</div>
+                            <div style="font-weight: 700; color: var(--primary-color);">• Сочи</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="partners-cta-section section-padding">
+            <div class="container">
+                <div class="partners-grid">
+                    <div class="partners-info" data-aos="fade-right">
+                        <h2 class="partners-title" style="color: #fff; font-size: 36px; margin-bottom: 20px;">Стать
+                            партнером</h2>
+                        <p class="partners-desc" style="color: #ccc; margin-bottom: 30px;">Оставьте заявку, чтобы
+                            получить персональное коммерческое предложение и актуальный оптовый прайс-лист.</p>
+                        <ul class="partners-list">
+                            <li><span class="check-icon">✓</span><span>Персональный менеджер</span></li>
+                            <li><span class="check-icon">✓</span><span>Приоритетная отгрузка</span></li>
+                            <li><span class="check-icon">✓</span><span>Обучение по продукции</span></li>
+                        </ul>
+                    </div>
+                    <div class="partners-form-card">
+                        <h3 style="margin-top: 0; margin-bottom: 20px;">Заявка на сотрудничество</h3>
+                        <form id="partnerForm">
+                            <input type="text" name="antispam" style="display:none !important;" tabindex="-1"
+                                autocomplete="off">
+                            <input type="hidden" name="form_subject" value="Заявка на партнерство (Страница Партнерам)">
+
+                            <input type="text" name="name" placeholder="Ваше Имя" class="input-field" required>
+                            <input type="tel" name="phone" placeholder="Телефон" class="input-field" required>
+                            <input type="text" name="city" placeholder="Город / Компания" class="input-field">
+
+                            <button type="submit" class="btn btn--primary full-width">Получить предложение</button>
+                            <p class="policy-small" style="margin-top: 15px;">Нажимая кнопку, вы соглашаетесь с <a
+                                    href="policy.html" target="_blank">политикой конфиденциальности</a>.</p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    {{> footer }}
+    {{> modals }}
+
+</body>
+
+</html>

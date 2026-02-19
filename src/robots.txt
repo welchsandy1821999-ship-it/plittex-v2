@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /send.php
+Disallow: /assets/docs/
+Disallow: /template.html
+
+Host: https://plittex.ru
+Sitemap: https://plittex.ru/sitemap.xml

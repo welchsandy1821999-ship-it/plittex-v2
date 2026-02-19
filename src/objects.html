@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Фото объектов и портфолио | ПЛИТТЕКС</title>
+    <meta name="description"
+        content="Примеры укладки тротуарной плитки Плиттекс. Фотографии благоустройства частных дворов и общественных парков ЮФО.">
+
+    <meta property="og:title" content="Портфолио объектов ПЛИТТЕКС">
+    <meta property="og:description" content="Более 2500 реализованных проектов. Посмотрите фото наших работ.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://plittex.ru/objects.html">
+    <meta property="og:image" content="assets/img/hero-bg.jpg">
+
+    <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
+
+    <link rel="preload" href="./assets/fonts/Montserrat-Black.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-ExtraBold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-Medium.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+
+
+    <link rel="stylesheet" href="./styles/main.scss">
+    <script src="https://unpkg.com/imask" defer></script>
+    <script type="module" src="./scripts/main.js"></script>
+
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "ImageGallery",
+        "name": "Портфолио объектов Плиттекс",
+        "description": "Фотографии благоустройства общественных пространств и частных дворов тротуарной плиткой Плиттекс.",
+        "author": {
+          "@type": "Organization",
+          "name": "ПЛИТТЕКС"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [{
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Главная",
+          "item": "https://plittex.ru/"
+        },{
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Наши объекты",
+          "item": "https://plittex.ru/objects.html"
+        }]
+      }
+    ]
+    </script>
+</head>
+
+<body>
+
+    <div id="toast-container"></div>
+
+    {{> header }}
+
+    <main>
+        <section class="page-header" style="background-image: url('assets/img/hero-bg.jpg');">
+            <div class="container" style="position: relative; z-index: 2;">
+                <h1 class="hero__title">Наши Проекты</h1>
+                <p class="hero__subtitle">Более 2500 реализованных объектов по Южному Федеральному Округу</p>
+            </div>
+        </section>
+
+        <div class="sticky-filters-wrapper">
+            <div class="container">
+                <div class="filter-container">
+                    <button class="filter-btn active" data-filter="all">Все проекты</button>
+                    <button class="filter-btn" data-filter="city">Общественные пространства</button>
+                    <button class="filter-btn" data-filter="private">Частное благоустройство</button>
+                </div>
+            </div>
+        </div>
+
+        <section class="section-padding" style="padding-top: 0; min-height: 600px;">
+            <div class="container">
+                <div class="masonry-grid" id="galleryContainer"></div>
+
+                <div class="gallery-load-more" id="loadMoreContainer">
+                    <div id="galleryCounter"
+                        style="margin-bottom: 15px; font-size: 15px; color: #888; font-weight: 600;"></div>
+                    <button class="btn-load-dark" id="loadMoreBtn">Показать еще фото</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="partners-cta-section">
+            <div class="container">
+                <div class="partners-grid">
+                    <div class="partners-info">
+                        <h2 class="partners-title">Впечатлил результат?</h2>
+                        <p class="partners-desc">
+                            Не откладывайте благоустройство на потом. Закажите <strong>бесплатный выезд
+                                замерщика</strong> прямо сейчас!
+                            Мы привезем образцы плитки, сделаем точные замеры лазерным оборудованием и рассчитаем смету.
+                        </p>
+                        <ul class="partners-list">
+                            <li><span class="check-icon">✓</span><span>Выезд в удобное для вас время</span></li>
+                            <li><span class="check-icon">✓</span><span>Консультация по подготовке основания</span></li>
+                            <li><span class="check-icon">✓</span><span>Подбор рисунка раскладки</span></li>
+                        </ul>
+                    </div>
+                    <div class="partners-form-card">
+                        <h3>Вызвать замерщика</h3>
+                        <p class="form-subtitle">Заполните форму, и мы свяжемся с вами в течение 15 минут</p>
+
+                        <form id="consultForm">
+                            <input type="text" name="antispam" style="display:none !important;" tabindex="-1">
+                            <input type="hidden" name="form_subject" value="Вызов замерщика (Объекты)">
+                            <input type="text" name="name" placeholder="Ваше Имя" class="input-field" required>
+                            <input type="tel" name="phone" placeholder="Телефон" class="input-field" required>
+                            <button type="submit" class="btn btn--primary full-width">Отправить заявку</button>
+                            <p class="policy-small">
+                                Нажимая кнопку, вы соглашаетесь с <a href="policy.html" target="_blank">политикой
+                                    конфиденциальности</a>.
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    {{> footer }}
+    {{> modals }}
+
+</body>
+
+</html>

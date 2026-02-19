@@ -1,0 +1,176 @@
+<section class="section-padding bg-light">
+    <div class="container">
+
+        <div
+            style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:40px; flex-wrap: wrap; gap: 15px;">
+            <h2 class="section-title" style="font-size:32px; color:var(--dark-color); margin:0;">Отзывы наших
+                клиентов</h2>
+
+            <button class="btn btn--primary js-open-modal" data-target="#reviewModal">Написать отзыв</button>
+        </div>
+
+        <div class="reviews-grid">
+
+            <div class="review-card p-card">
+                <div class="review-header">
+                    <div class="review-avatar" style="background:#f0f7fc; color:var(--primary-color);">А</div>
+                    <div>
+                        <strong style="font-size: 16px; display:block;">Алексей Смирнов</strong>
+                        <div class="stars">★★★★★</div>
+                    </div>
+                </div>
+                <div class="review-content-wrap">
+                    <p class="review-text">Заказывали тротуарную плитку «Старый город». Качество отличное,
+                        геометрия идеальная. Уложили быстро, брака почти не было. Спасибо менеджерам за помощь с
+                        расчетом!</p>
+                </div>
+                <button class="review-toggle-btn js-toggle-text">Читать полностью</button>
+            </div>
+
+            <div class="review-card p-card">
+                <div class="review-header">
+                    <div class="review-avatar" style="background:#fcf0fc; color:#9b59b6;">Е</div>
+                    <div>
+                        <strong style="font-size: 16px; display:block;">Елена В.</strong>
+                        <div class="stars">★★★★★</div>
+                    </div>
+                </div>
+                <div class="review-content-wrap">
+                    <p class="review-text">Очень понравилась коллекция Меланж. Двор теперь выглядит как в
+                        Европе! Доставили манипулятором точно в срок, водитель виртуозно разгрузил поддоны прямо
+                        через забор. Сама плитка невероятно красиво переливается на солнце. Переживали, что
+                        после дождя будет скользко, но шершавая фактура отлично держит ногу. Рекомендую завод
+                        Плиттекс всем соседям, уже двое приходили спрашивать контакты.</p>
+                </div>
+                <button class="review-toggle-btn js-toggle-text">Читать полностью</button>
+            </div>
+
+            <div class="review-card p-card">
+                <div class="review-header">
+                    <div class="review-avatar" style="background:#fdf2f2; color:#e74c3c;">М</div>
+                    <div>
+                        <strong style="font-size: 16px; display:block;">Михаил (Прораб)</strong>
+                        <div class="stars">★★★★★</div>
+                    </div>
+                </div>
+                <div class="review-content-wrap">
+                    <p class="review-text">Сотрудничаем с заводом уже третий год. Берем бордюры и поребрики на
+                        объекты. Всегда стабильное качество и есть объемы в наличии. Отличный партнер.</p>
+                </div>
+                <button class="review-toggle-btn js-toggle-text">Читать полностью</button>
+            </div>
+
+        </div>
+
+        <div class="reviews-hidden reviews-grid" id="hiddenReviews" style="display: none; margin-top: 30px;">
+
+            <div class="review-card p-card">
+                <div class="review-header">
+                    <div class="review-avatar" style="background:#f0f7fc; color:var(--primary-color);">Д</div>
+                    <div>
+                        <strong style="font-size: 16px; display:block;">Дмитрий Николаевич</strong>
+                        <div class="stars">★★★★★</div>
+                    </div>
+                </div>
+                <div class="review-content-wrap">
+                    <p class="review-text">Искал надежную плитку для парковки под два тяжелых внедорожника.
+                        Выбрал толщину 60мм из серии Гранит. Перезимовали просто отлично. Никаких трещин, цвет
+                        не выцвел и не пошел пятнами. До этого брал дешевую вибролитую у частников — она
+                        буквально раскрошилась после первой же зимы из-за соли, которую заносили на колесах с
+                        дороги. Здесь вибропресс, бетон плотный, воду в себя вообще не впитывает. Разница
+                        колоссальная.</p>
+                </div>
+                <button class="review-toggle-btn js-toggle-text">Читать полностью</button>
+            </div>
+
+            <div class="review-card p-card">
+                <div class="review-header">
+                    <div class="review-avatar" style="background:#fcf0fc; color:#9b59b6;">О</div>
+                    <div>
+                        <strong style="font-size: 16px; display:block;">Ольга</strong>
+                        <div class="stars">★★★★☆</div>
+                    </div>
+                </div>
+                <div class="review-content-wrap">
+                    <p class="review-text">Брали цвет «Оникс» для зоны барбекю и дорожек. Вживую камень
+                        смотрится в сто раз лучше, чем на сайте! На солнце появляются благородные переливы.
+                        Сняла звезду за то, что в разгар сезона пришлось подождать доставку на пару дней дольше
+                        обещанного.</p>
+                </div>
+                <button class="review-toggle-btn js-toggle-text">Читать полностью</button>
+            </div>
+
+            <div class="review-card p-card">
+                <div class="review-header">
+                    <div class="review-avatar" style="background:#fdf2f2; color:#e74c3c;">И</div>
+                    <div>
+                        <strong style="font-size: 16px; display:block;">ИП Иванов С.А.</strong>
+                        <div class="stars">★★★★★</div>
+                    </div>
+                </div>
+                <div class="review-content-wrap">
+                    <p class="review-text">Закупаем продукцию оптом для благоустройства муниципальных
+                        территорий. Завод дает хорошую скидку на объем, с документами всегда порядок, отгрузка
+                        фурами идет без задержек.</p>
+                </div>
+                <button class="review-toggle-btn js-toggle-text">Читать полностью</button>
+            </div>
+
+            <div class="review-card p-card">
+                <div class="review-header">
+                    <div class="review-avatar" style="background:#f0f7fc; color:var(--primary-color);">С</div>
+                    <div>
+                        <strong style="font-size: 16px; display:block;">Сергей Петрович</strong>
+                        <div class="stars">★★★★★</div>
+                    </div>
+                </div>
+                <div class="review-content-wrap">
+                    <p class="review-text">Делали полную реконструкцию базы отдыха. Объем был огромный — более
+                        2000 квадратов плитки разных форм и цветов. Завод отгружал продукцию строго по графику,
+                        ни разу не подвели с простоем бригады укладчиков. Геометрия камня четкая, швы получаются
+                        ровными. Отдельное огромное спасибо технологу, который лично приезжал на наш объект для
+                        консультации строителей по укладке сложных радиусных дорожек.</p>
+                </div>
+                <button class="review-toggle-btn js-toggle-text">Читать полностью</button>
+            </div>
+
+            <div class="review-card p-card">
+                <div class="review-header">
+                    <div class="review-avatar" style="background:#fcf0fc; color:#9b59b6;">А</div>
+                    <div>
+                        <strong style="font-size: 16px; display:block;">Анна Сергеева</strong>
+                        <div class="stars">★★★★★</div>
+                    </div>
+                </div>
+                <div class="review-content-wrap">
+                    <p class="review-text">Выложили садовые дорожки цветом «Осень». Очень теплый, приятный и
+                        уютный оттенок, шикарно контрастирует на фоне зеленого газона и хвойных деревьев.
+                        Поверхность ровная, дети постоянно катаются на самокатах.</p>
+                </div>
+                <button class="review-toggle-btn js-toggle-text">Читать полностью</button>
+            </div>
+
+            <div class="review-card p-card">
+                <div class="review-header">
+                    <div class="review-avatar" style="background:#fdf2f2; color:#e74c3c;">В</div>
+                    <div>
+                        <strong style="font-size: 16px; display:block;">Виктор</strong>
+                        <div class="stars">★★★★★</div>
+                    </div>
+                </div>
+                <div class="review-content-wrap">
+                    <p class="review-text">Хорошая, крепкая плитка. Брал водостоки и поребрик. Цены абсолютно
+                        адекватные, качество прокраса бетона на высоком уровне. При самовывозе ребята на складе
+                        быстро всё загрузили карой в прицеп. Буду обращаться еще.</p>
+                </div>
+                <button class="review-toggle-btn js-toggle-text">Читать полностью</button>
+            </div>
+
+        </div>
+
+        <div class="text-center" style="margin-top: 40px;">
+            <button class="btn btn--secondary" id="btnToggleReviews">Показать все отзывы</button>
+        </div>
+
+    </div>
+</section>

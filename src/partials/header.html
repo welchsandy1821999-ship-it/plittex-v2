@@ -1,0 +1,45 @@
+    <header class="header">
+        <div class="container header__container">
+            <a href="index.html" class="logo">
+                <svg width="180" viewBox="0 0 450 120" xmlns="http://www.w3.org/2000/svg">
+                    <g transform="translate(0, 5)">
+                        <rect class="logo-tile-blue" x="0" y="0" width="34" height="34" rx="2" fill="#006BB3" />
+                        <rect class="logo-tile-blue" x="0" y="38" width="34" height="34" rx="2" fill="#006BB3" />
+                        <rect class="logo-tile-blue" x="0" y="76" width="34" height="34" rx="2" fill="#006BB3" />
+                        <rect class="logo-tile-blue" x="38" y="0" width="34" height="34" rx="2" fill="#006BB3" />
+                        <g>
+                            <rect class="logo-bg-p" x="38" y="38" width="34" height="34" rx="2" fill="#32383E" />
+                            <text x="55" y="69" class="letter-p" font-family="Montserrat, sans-serif" font-weight="900"
+                                font-size="39" text-anchor="middle" fill="#FFFFFF">П</text>
+                        </g>
+                        <rect class="logo-tile-blue" x="38" y="76" width="34" height="34" rx="2" fill="#006BB3" />
+                        <rect class="logo-tile-blue" x="76" y="0" width="34" height="34" rx="2" fill="#006BB3" />
+                        <rect class="logo-tile-blue" x="76" y="76" width="34" height="34" rx="2" fill="#006BB3" />
+                        <text x="74" y="69" class="logo-text" font-family="Montserrat, sans-serif" font-weight="900"
+                            font-size="39" letter-spacing="0.5" fill="#FFFFFF">ЛИТТЕКС</text>
+                    </g>
+                </svg>
+            </a>
+
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+
+            <nav class="nav" id="mainNav">
+                <a href="about.html" class="nav__link">О заводе</a>
+                <a href="catalog.html" class="nav__link">Каталог</a>
+                <a href="objects.html" class="nav__link">Объекты</a>
+                <a href="partners.html" class="nav__link">Партнерам</a>
+                <a href="contacts.html" class="nav__link">Контакты</a>
+
+                <div class="nav-mobile-footer" style="display:none;">
+                    <a href="tel:+79888880506" class="nav-mobile-phone">+7 (988) 888-05-06</a>
+                    <button class="btn btn--primary full-width js-open-modal" data-subject="Заказ звонка">Заказать
+                        звонок</button>
+                </div>
+            </nav>
+
+            <div class="header__contacts">
+                <a href="tel:+79888880506" class="phone">+7 (988) 888-05-06</a>
+                <button class="btn btn--outline js-open-modal" data-subject="Заказ звонка">Заказать звонок</button>
+            </div>
+        </div>
+    </header>

@@ -1,0 +1,57 @@
+/* ==========================================================================
+   ПОДКЛЮЧЕНИЕ ЛОКАЛЬНЫХ ШРИФТОВ (MONTSERRAT)
+   ========================================================================== */
+
+/* Комментарий: Обычное начертание (Regular, 400). Используется для основного текста. */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../assets/fonts/Montserrat/Montserrat-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap; /* Комментарий: Позволяет браузеру сразу показать системный шрифт, пока грузится этот */
+}
+
+/* Комментарий: Среднее начертание (Medium, 500). Используется для подзаголовков и акцентов. */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../assets/fonts/Montserrat/Montserrat-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Комментарий: Полужирное начертание (SemiBold, 600). Используется для важных элементов интерфейса. */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../assets/fonts/Montserrat/Montserrat-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Комментарий: Жирное начертание (Bold, 700). Используется для кнопок и малых заголовков. */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../assets/fonts/Montserrat/Montserrat-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Комментарий: Очень жирное начертание (ExtraBold, 800). Используется для главных заголовков (H1, H2). */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../assets/fonts/Montserrat/Montserrat-ExtraBold.woff2') format('woff2');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Комментарий: Максимально жирное начертание (Black, 900). Используется для крупных цифр статистики и логотипа. */
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../assets/fonts/Montserrat/Montserrat-Black.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}

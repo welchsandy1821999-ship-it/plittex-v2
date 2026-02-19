@@ -1,0 +1,52 @@
+<svg viewBox="0 0 450 120" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap');
+
+        .t-blue { fill: #006BB3; }
+        .t-graphite { fill: #32383E; }
+        .t-white { fill: #FFFFFF; }
+
+        .font-logo { 
+          font-family: 'Montserrat', sans-serif; 
+          font-weight: 900;
+          text-transform: uppercase;
+          /* Добавляем обводку, чтобы отделить текст от синих квадратов */
+          paint-order: stroke;
+          stroke: #FFFFFF;
+          stroke-width: 4px;
+        }
+
+        .font-letter {
+          font-family: 'Montserrat', sans-serif; 
+          font-weight: 700;
+        }
+      </style>
+    </defs>
+
+    <g transform="translate(0, 5)"> 
+      <!-- Сетка из синих плиток -->
+      <!-- 1 колонка -->
+      <rect class="t-blue" x="0" y="0" width="34" height="34" rx="2"/>
+      <rect class="t-blue" x="0" y="38" width="34" height="34" rx="2"/>
+      <rect class="t-blue" x="0" y="76" width="34" height="34" rx="2"/>
+
+      <!-- 2 колонка -->
+      <rect class="t-blue" x="38" y="0" width="34" height="34" rx="2"/>
+      <!-- Плитка с буквой П (Центр) -->
+      <g>
+        <rect class="t-graphite" x="38" y="38" width="34" height="34" rx="2"/>
+        <text x="55" y="69" class="font-letter t-white" font-size="36" text-anchor="middle">П</text>
+      </g>
+      <rect class="t-blue" x="38" y="76" width="34" height="34" rx="2"/>
+
+      <!-- 3 колонка (на нее наезжает текст) -->
+      <rect class="t-blue" x="76" y="0" width="34" height="34" rx="2"/>
+      <rect class="t-blue" x="76" y="76" width="34" height="34" rx="2"/>
+
+      <!-- Текст названия -->
+      <!-- x=75: Текст начинается сразу после буквы П -->
+      <!-- stroke-width: создает белую маску вокруг букв -->
+      <text x="75" y="69" class="font-logo t-graphite" font-size="39" letter-spacing="1">ЛИТТЕКС</text>
+    </g>
+</svg>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Новости и акции завода ПЛИТТЕКС | Производство тротуарной плитки</title>
+    <meta name="description"
+        content="Узнайте последние новости завода ПЛИТТЕКС: запуск новых коллекций тротуарной плитки, сезонные скидки, советы по уходу и реализованные проекты.">
+    <meta name="keywords"
+        content="новости плиттекс, акции на тротуарную плитку, завод тротуарной плитки армавир, благоустройство, новые коллекции плитки">
+    <link rel="canonical" href="https://plittex.ru/news.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Новости и акции завода ПЛИТТЕКС">
+    <meta property="og:description"
+        content="События производства, новые коллекции, сезонные скидки и советы экспертов по уходу за плиткой.">
+    <meta property="og:url" content="https://plittex.ru/news.html">
+    <meta property="og:image" content="https://plittex.ru/assets/img/hero-bg.jpg">
+    <meta property="og:site_name" content="Завод ПЛИТТЕКС">
+    <meta property="og:locale" content="ru_RU">
+
+    
+    <link rel="icon" href="assets/img/favicon.ico" type="image/x-icon">
+
+    <link rel="preload" href="./assets/fonts/Montserrat-Black.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-ExtraBold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-Medium.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="./assets/fonts/Montserrat-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+
+    <link rel="stylesheet" href="./styles/main.scss">
+    <script src="https://unpkg.com/imask" defer></script>
+    <script type="module" src="./scripts/main.js"></script>
+    
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Новости и акции завода ПЛИТТЕКС",
+        "description": "Свежие новости производства, акции на тротуарную плитку и советы экспертов.",
+        "url": "https://plittex.ru/news.html",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Завод ПЛИТТЕКС",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://plittex.ru/assets/img/logo.png"
+          }
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [{
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Главная",
+          "item": "https://plittex.ru/"
+        },{
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Новости",
+          "item": "https://plittex.ru/news.html"
+        }]
+      }
+    ]
+    </script>
+</head>
+
+<body>
+
+    <div id="toast-container"></div>
+
+    {{> header }}
+
+    <main>
+        <section class="page-header" style="background-image: url('assets/img/hero-bg.jpg');">
+            <div class="page-header-bg"></div>
+            <div class="hero__overlay"></div>
+            <div class="container" style="position: relative; z-index: 2;">
+                <h1 class="hero__title">Новости Завода</h1>
+                <p class="hero__subtitle">Жизнь компании, модернизация и достижения</p>
+            </div>
+        </section>
+
+        <section class="section-padding">
+            <div class="container">
+                <div class="news-filters">
+                    <button class="filter-btn active" data-filter="all">Все новости</button>
+                    <button class="filter-btn" data-filter="event">События</button>
+                    <button class="filter-btn" data-filter="project">Объекты</button>
+                    <button class="filter-btn" data-filter="article">Полезное</button>
+                </div>
+
+                {{> news-grid }}
+
+                <div class="cta-news">
+                    <h3>Хотите быть в курсе?</h3>
+                    <p>Подпишитесь на новости или задайте вопрос нашему специалисту</p>
+                    <button class="btn btn--primary js-open-modal" data-subject="Вопрос специалисту">Задать
+                        вопрос</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    {{> footer }}
+    {{> modals }}
+
+</body>
+
+</html>
