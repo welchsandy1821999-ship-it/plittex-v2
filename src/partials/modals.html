@@ -35,22 +35,28 @@
 <div class="cart-overlay" id="cartOverlay" onclick="window.toggleCart()"></div>
 <div class="cart-drawer" id="cartDrawer">
     <div class="cart-drawer__header">
-        <h3>КОРЗИНА <span id="cartHeaderQty" style="font-weight:400; color:#777;">(0)</span></h3>
-        <button class="cart-drawer__close" onclick="window.toggleCart()">×</button>
+        <h3 style="margin: 0; font-size: 18px; font-weight: 800;">КОРЗИНА <span id="cartHeaderQty"
+                style="font-weight:400; color:#777;">(0)</span></h3>
+        <button class="cart-drawer__close" onclick="toggleCart()">×</button>
     </div>
     <div class="cart-drawer__body">
         <div id="cartItems"></div>
         <div class="cart-bottom-wrapper">
+
             <div class="cart-summary-block">
                 <div class="sum-row"><span>Общее кол-во:</span> <strong id="cartTotalQty">0</strong></div>
                 <div class="sum-row"><span>Вес:</span> <strong id="cartTotalWeight">0 кг</strong></div>
                 <div class="sum-row"><span>Поддоны:</span> <strong id="cartTotalPallets"
                         style="color:var(--primary-color);">0</strong></div>
             </div>
-            <div class="cart-total-row"><span>Итого:</span><span id="cartTotalSum">0 ₽</span></div>
+
+            <div class="cart-total-row">
+                <span>Итого:</span>
+                <span id="cartTotalSum">0 ₽</span>
+            </div>
+
             <form id="orderForm" class="drawer-form">
-                <input type="text" name="antispam" value="" style="display:none !important;" tabindex="-1"
-                    autocomplete="off">
+                <input type="text" name="antispam" style="display:none !important;" tabindex="-1" autocomplete="off">
                 <input type="hidden" name="form_subject" value="Заказ из корзины">
                 <input type="hidden" name="orderData" id="orderDataField">
                 <input type="text" name="name" placeholder="Ваше Имя" class="input-field" required>
@@ -59,10 +65,13 @@
                 <p class="policy-small">Нажимая кнопку, вы соглашаетесь с <a href="policy.html"
                         target="_blank">политикой конфиденциальности</a>.</p>
             </form>
+
             <a href="catalog.html" class="btn-to-catalog">❮ ПЕРЕЙТИ В КАТАЛОГ</a>
-            <button class="btn-clear-cart" onclick="window.clearCart()">Очистить корзину</button>
+            <button class="btn-clear-cart" onclick="clearCart()">Очистить корзину</button>
         </div>
     </div>
+</div>
+</div>
 </div>
 
 <div class="sticky-cart" id="stickyCart" onclick="window.toggleCart()">

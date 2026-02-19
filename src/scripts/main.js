@@ -508,8 +508,7 @@ window.renderCatalog = function () {
                         </table>
                     ${dotsHtml}
                     <div class="price-list">${priceHtml}</div>
-                        <button class="btn btn--primary full-width" onclick="window.addToCartPrep('${item.id}')">Рассчитать</button>
-                    </div>
+<button class="btn btn--primary full-width" onclick="window.openQuickOrder('${item.id}')">В корзину</button>                    </div>
                 `;
                 grid.appendChild(card);
             });
@@ -657,21 +656,21 @@ window.toggleCart = function () {
 
 window.addToCart = function (productId, colorId = 'gray', quantity = 1) {
     const product = fullCatalog.find(item => item.id === productId);
-    if (!product) {
-        showToast('Товар не найден', 'error');
-        return;
-    }
+    if (!product) { showToast('Товар не найден', 'error'); return; }
 
     const colorName = COLOR_NAMES[colorId] || 'Не указан';
     const price = product.prices[colorId] || product.prices['mix'] || 0;
     const thumb = `assets/img/catalog/${product.col}/${product.form}/${colorId}.png`;
+
+    // ПРАВИЛЬНЫЙ РАСЧЕТ ВЕСА: Вес поддона делим на количество в поддоне
+    const unitWeight = (parseFloat(product.w) || 0) / (parseFloat(product.q) || 1);
 
     const existingItem = cart.find(item => item.id === productId && item.color === colorName);
 
     if (existingItem) {
         existingItem.qty += quantity;
         existingItem.sum = existingItem.qty * price;
-        existingItem.weight = (parseFloat(product.w) || 0) * existingItem.qty;
+        existingItem.weight = unitWeight * existingItem.qty;
         existingItem.pallets = ((1 / (parseFloat(product.q) || 1)) * existingItem.qty).toFixed(2);
         showToast(`Количество "${product.n}" увеличено`, 'info');
     } else {
@@ -684,14 +683,13 @@ window.addToCart = function (productId, colorId = 'gray', quantity = 1) {
             qty: quantity,
             unit: product.u || 'шт',
             thumb: thumb,
-            weight: (parseFloat(product.w) || 0) * quantity,
+            weight: unitWeight * quantity,
             pallets: ((1 / (parseFloat(product.q) || 1)) * quantity).toFixed(2)
         });
         showToast(`Товар "${product.n}" добавлен в корзину`, 'success');
     }
 
     saveCart();
-
     const d = document.getElementById('cartDrawer');
     if (d && !d.classList.contains('active')) toggleCart();
 };
@@ -705,34 +703,102 @@ function loadCart() {
 function saveCart() {
     localStorage.setItem('plittex_cart', JSON.stringify(cart));
     renderCart();
+
+    // Добавляем класс анимации на синюю плавающую кнопку
+    const stickyCart = document.getElementById('stickyCart');
+    if (stickyCart) {
+        stickyCart.classList.add('cart-bounce');
+        setTimeout(() => stickyCart.classList.remove('cart-bounce'), 400);
+    }
 }
 
 window.delCart = (i) => { cart.splice(i, 1); saveCart(); };
 window.clearCart = () => { if (confirm('Очистить корзину?')) { cart = []; saveCart(); toggleCart(); } };
 
+/* --- 1. УМНАЯ ОТРИСОВКА КОРЗИНЫ --- */
 function renderCart() {
     const w = document.getElementById('cartItems');
     const s = document.getElementById('stickyCart');
     if (!w) return;
+
     let sum = 0, wgt = 0, qty = 0, fp = 0, pp = 0;
     w.innerHTML = '';
+
     if (cart.length === 0) {
         w.innerHTML = '<div style="text-align:center; padding:30px; color:#999;">Корзина пуста</div>';
         if (s) s.classList.remove('visible');
-    } else { if (s) s.classList.add('visible'); }
+    } else {
+        if (s) s.classList.add('visible');
+    }
 
     cart.forEach((c, i) => {
         sum += c.sum; wgt += (c.weight || 0); qty += c.qty;
         let p = parseFloat(c.pallets) || 0;
         fp += Math.floor(p); if (p % 1 > 0.01) pp++;
-        w.innerHTML += `<div class="cart-item"><img src="${c.thumb || NO_PHOTO_SRC}" class="ci-img" onerror="window.handleImgError(this)"><div class="ci-info"><div class="ci-name">${c.name}</div><div class="ci-meta">${c.color || ''} | ${c.qty} ${c.unit}</div></div><div class="ci-right"><div class="ci-price">${c.sum.toLocaleString()} ₽</div><div class="ci-del" onclick="delCart(${i})">✕</div></div></div>`;
+        w.innerHTML += `
+        <div class="cart-item">
+            <img src="${c.thumb || NO_PHOTO_SRC}" class="ci-img" onerror="window.handleImgError(this)">
+            <div class="ci-info">
+                <div class="ci-name">${c.name}</div>
+                <div class="ci-meta">Цвет: ${c.color || 'Стандарт'}</div>
+                
+                <div class="ci-qty-wrapper">
+                    <button class="ci-qty-btn" onclick="window.changeCartQty(${i}, -1)">−</button>
+                    <input type="text" class="ci-qty-input" value="${c.qty}" readonly>
+                    <button class="ci-qty-btn" onclick="window.changeCartQty(${i}, 1)">+</button>
+                </div>
+            </div>
+            <div class="ci-right">
+                <button class="ci-del" onclick="window.delCart(${i})" title="Удалить товар">✕</button>
+                <div style="text-align:right;">
+                    <div class="ci-price">${c.sum.toLocaleString()} ₽</div>
+                    <div class="ci-price-one">${c.price.toLocaleString()} ₽/${c.unit}</div>
+                </div>
+            </div>
+        </div>`;
     });
 
     const setText = (id, txt) => { const el = document.getElementById(id); if (el) el.innerText = txt; }
-    setText('cartTotalSum', sum.toLocaleString() + ' ₽'); setText('scTotal', sum.toLocaleString() + ' ₽'); setText('scCount', qty); setText('cartHeaderQty', `(${qty})`); setText('cartTotalQty', qty); setText('cartTotalWeight', Math.round(wgt).toLocaleString() + ' кг'); setText('cartTotalPallets', `${fp} цел. + ${pp} неполн.`);
-    const ord = document.getElementById('orderDataField'); if (ord) ord.value = JSON.stringify(cart);
+
+    setText('cartTotalSum', sum.toLocaleString() + ' ₽');
+    setText('scTotal', sum.toLocaleString() + ' ₽');
+    setText('scCount', cart.length);
+    setText('cartHeaderQty', `(${cart.length})`);
+
+    // Обновляем новую серую плашку статистики в боковой корзине
+    setText('cartTotalQty', qty);
+    setText('cartTotalWeight', Math.round(wgt).toLocaleString() + ' кг');
+    setText('cartTotalPallets', `${fp} цел. + ${pp} неполн.`);
+
+    const ord = document.getElementById('orderDataField');
+    if (ord) ord.value = JSON.stringify(cart);
 }
 
+/* ==========================================
+   ФУНКЦИЯ УМНОГО ИЗМЕНЕНИЯ КОЛИЧЕСТВА
+   ========================================== */
+/* ==========================================
+   ФУНКЦИЯ УМНОГО ИЗМЕНЕНИЯ КОЛИЧЕСТВА
+   ========================================== */
+window.changeCartQty = function (index, step) {
+    if (!cart[index]) return;
+
+    cart[index].qty += step;
+    if (cart[index].qty < 1) cart[index].qty = 1;
+
+    cart[index].sum = cart[index].qty * cart[index].price;
+
+    const product = fullCatalog.find(p => p.id === cart[index].id);
+    if (product) {
+        // ПРАВИЛЬНЫЙ ПЕРЕСЧЕТ ВЕСА
+        const unitWeight = (parseFloat(product.w) || 0) / (parseFloat(product.q) || 1);
+        cart[index].weight = unitWeight * cart[index].qty;
+        cart[index].pallets = ((1 / (parseFloat(product.q) || 1)) * cart[index].qty).toFixed(2);
+    }
+
+    saveCart();
+    renderCart(); // Мгновенно обновляем плашку статистики
+};
 // --- ЛОГИКА КАЛЬКУЛЯТОРА ---
 let currentCalcProduct = null;
 
@@ -802,131 +868,153 @@ document.querySelectorAll('.js-close-calc').forEach(el => {
     };
 });
 
-// ---------------- ДУБЛИКАТЫ ФУНКЦИИ БЫСТРОГО ЗАКАЗА ----------------
-
-// [ВЕРСИЯ 2: Полная модалка с цветами (была внутри DOMContentLoaded)]
+/* --- 2. УМНОЕ ОКНО ДОБАВЛЕНИЯ В ЗАКАЗ (БЕЗ ДУБЛЕЙ) --- */
 window.openQuickOrder = function (productId) {
-    // Ищем товар по ID
     const product = fullCatalog.find(p => p.id === productId);
     if (!product) return;
 
-    // Удаляем старое окно из HTML (если оно там осталось от предыдущего клика)
     const oldModal = document.getElementById('quickOrderModal');
     if (oldModal) oldModal.remove();
 
-    // Составляем список доступных цветов. Если есть ключ 'mix', используем массив мультицветов
     const colorsList = product.prices['mix'] ? ['onyx', 'autumn', 'ruby', 'jasper', 'amber'] : Object.keys(product.prices);
-    const defColor = colorsList[0]; // Берем первый цвет по умолчанию
+    const defColor = colorsList[0];
     const basePath = `assets/img/catalog/${product.col}/${product.form}/`;
 
-    // Создаем новый контейнер для всплывающего окна
+    const startPrice = product.prices[defColor] || product.prices['mix'];
+
+    // ПРАВИЛЬНЫЙ СТАРТОВЫЙ ВЕС
+    const unitWeight = (parseFloat(product.w) || 0) / (parseFloat(product.q) || 1);
+
     const modal = document.createElement('div');
-    modal.className = 'modal active'; // Сразу делаем его видимым
+    modal.className = 'modal active';
     modal.id = 'quickOrderModal';
 
-    // Генерируем внутреннюю HTML-разметку нашего красивого окна
     modal.innerHTML = `
     <div class="modal-overlay" onclick="closeAllPopups()"></div>
     
-    <div class="modal-container" style="max-width: 500px; padding: 30px;">
-        <button class="modal-close" onclick="closeAllPopups()" style="top: 20px; right: 20px;">✕</button>
+    <div class="modal-container" style="max-width: 480px; padding: 0; border-radius: 16px; overflow: hidden;">
+        <button class="modal-close" onclick="closeAllPopups()" style="top: 15px; right: 15px; background: #fff; border-radius: 50%; width: 32px; height: 32px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">✕</button>
         
-        <div class="modal-header" style="text-align: left; margin-bottom: 25px;">
-            <h3 style="font-size: 20px; margin: 0;">Добавить в корзину</h3>
-        </div>
-        
-        <div style="display: flex; gap: 20px; margin-bottom: 25px; align-items: center;">
-            <img id="qo-img" src="${basePath}${defColor}.png" onerror="window.handleImgError(this)" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid #eee;">
+        <div style="background: #f8f9fa; padding: 25px 30px; border-bottom: 1px solid #eee; display: flex; gap: 20px; align-items: center;">
+            <img id="qo-img" src="${basePath}${defColor}.png" onerror="window.handleImgError(this)" style="width: 110px; height: 110px; object-fit: contain; border-radius: 12px; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); padding: 5px;">
             <div>
-                <h4 style="margin: 0 0 8px; font-size: 16px; font-weight: 800; line-height: 1.3;">${product.n}</h4>
-                <div id="qo-price" style="font-size: 22px; font-weight: 900; color: var(--primary-color);">${product.prices[defColor] || product.prices['mix']} ₽</div>
+                <h4 style="margin: 0 0 5px; font-size: 18px; font-weight: 800; line-height: 1.2;">${product.n}</h4>
+                <div style="font-size: 13px; color: #777; margin-bottom: 8px;">Размер: ${product.s}</div>
+                <div id="qo-price-unit" style="font-size: 18px; font-weight: 900; color: var(--primary-color);">${startPrice} ₽ <span style="font-size:12px; color:#999; font-weight:600;">за ${product.u}</span></div>
             </div>
         </div>
 
-        <div style="margin-bottom: 25px;">
-            <div style="font-size: 12px; color: #888; margin-bottom: 10px; font-weight: 700; text-transform: uppercase;">Цвет: <span id="qo-color-name" style="color: #333;">${COLOR_NAMES[defColor]}</span></div>
-            <div class="pc-colors" id="qo-colors-container" data-selected-color="${defColor}">
-                ${colorsList.map(c => `
-                    <div class="color-dot ${c === defColor ? 'active' : ''}" 
-                         style="background:${COLOR_MAP[c]}; width: 34px; height: 34px; ${c === defColor ? 'box-shadow: 0 0 0 2px #333;' : ''}" 
-                         data-color="${c}" 
-                         data-price="${product.prices[c] || product.prices['mix']}"
-                         data-name="${COLOR_NAMES[c]}"
-                         data-img="${basePath}${c}.png"
-                         onclick="selectQOColor(this)">
+        <div style="padding: 25px 30px;">
+            <div style="margin-bottom: 25px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px;">
+                    <span style="font-size: 12px; color: #888; font-weight: 700; text-transform: uppercase;">Цвет: <span id="qo-color-name" style="color: #333;">${COLOR_NAMES[defColor]}</span></span>
+                </div>
+                
+                <div class="pc-colors" id="qo-colors-container" data-selected-color="${defColor}" data-current-price="${startPrice}" data-weight="${unitWeight}">
+                    ${colorsList.map(c => `
+                        <div class="color-dot ${c === defColor ? 'active' : ''}" 
+                             style="background:${COLOR_MAP[c]}; width: 38px; height: 38px; ${c === defColor ? 'box-shadow: 0 0 0 2px #333;' : ''}" 
+                             data-color="${c}" 
+                             data-price="${product.prices[c] || product.prices['mix']}"
+                             data-name="${COLOR_NAMES[c]}"
+                             data-img="${basePath}${c}.png"
+                             onclick="window.selectQOColor(this)">
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; background: #fbfbfb; padding: 15px; border-radius: 12px; border: 1px solid #eee;">
+                <div>
+                    <div style="font-size: 11px; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Количество (${product.u}):</div>
+                    <div style="display: flex; align-items: center; border: 1px solid #d5d5d5; border-radius: 8px; width: fit-content; overflow: hidden; background: #fff;">
+                        <button onclick="window.changeQOQty(-1)" style="width: 36px; height: 36px; background: #f8f9fa; border: none; font-size: 18px; cursor: pointer; color: #555; display: flex; align-items: center; justify-content: center; padding: 0;">−</button>
+                        <input type="number" id="qo-qty" value="" placeholder="1" inputmode="decimal" class="no-spinners" oninput="window.updateQOTotals()" style="width: 65px; height: 36px; border: none; border-left: 1px solid #d5d5d5; border-right: 1px solid #d5d5d5; text-align: left; padding-left: 12px; font-size: 16px; font-weight: 800; outline: none; color: #333;">                        
+                        <button onclick="window.changeQOQty(1)" style="width: 36px; height: 36px; background: #f8f9fa; border: none; font-size: 18px; cursor: pointer; color: #555; display: flex; align-items: center; justify-content: center; padding: 0;">+</button>
                     </div>
-                `).join('')}
+                </div>
+                
+                <div style="text-align: right; flex-shrink: 0;">
+                    <div style="font-size: 11px; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Итого:</div>
+                    <div id="qo-total-price" style="font-size: 22px; font-weight: 900; color: #333; line-height: 1;">${startPrice.toLocaleString()} ₽</div>
+                    <div id="qo-total-weight" style="font-size: 12px; color: #999; margin-top: 6px;">Вес: ${Math.round(unitWeight).toLocaleString()} кг</div>
+                </div>
             </div>
+
+            <button onclick="window.confirmQOAdd('${product.id}')" class="btn btn--primary" style="width: 100%; padding: 16px; font-size: 15px; border-radius: 50px;">ДОБАВИТЬ В КОРЗИНУ</button>
         </div>
+    </div>`;
 
-        <div style="margin-bottom: 30px;">
-            <div style="font-size: 12px; color: #888; margin-bottom: 10px; font-weight: 700; text-transform: uppercase;">Количество (${product.u}):</div>
-            <div style="display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; width: 140px; overflow: hidden; background: #fff;">
-                <button onclick="changeQOQty(-1)" style="width: 45px; height: 45px; background: #f8f9fa; border: none; font-size: 20px; cursor: pointer; color: #555; transition: 0.2s;">-</button>
-                <input type="number" id="qo-qty" value="1" min="1" style="width: 50px; height: 45px; border: none; border-left: 1px solid #ddd; border-right: 1px solid #ddd; text-align: center; font-size: 16px; font-weight: 800; outline: none; -moz-appearance: textfield; color: #333;">
-                <button onclick="changeQOQty(1)" style="width: 45px; height: 45px; background: #f8f9fa; border: none; font-size: 20px; cursor: pointer; color: #555; transition: 0.2s;">+</button>
-            </div>
-        </div>
-
-        <button onclick="confirmQOAdd('${product.id}')" class="btn btn--primary" style="width: 100%; padding: 16px; font-size: 15px;">Добавить в заказ</button>
-    </div>
-`;
-
-    // Внедряем готовое окно в код страницы
     document.body.appendChild(modal);
-
-    // Блокируем прокрутку основного сайта, пока окно открыто
     document.body.style.overflow = 'hidden';
+
+    setTimeout(() => {
+        const input = document.getElementById('qo-qty');
+        if (input) input.focus();
+    }, 100);
 };
 
-// Функция переключения цвета по клику на кружочек
+// --- ФУНКЦИЯ ЖИВОГО ПЕРЕСЧЕТА ИТОГОВ ---
+window.updateQOTotals = function () {
+    const input = document.getElementById('qo-qty');
+    let qty = parseInt(input.value);
+
+    // Если поле пустое (NaN), берем 1 для расчета цены, но в самом поле оставляем пустоту
+    let calcQty = isNaN(qty) ? 1 : qty;
+    if (calcQty < 0) calcQty = 0;
+
+    const container = document.getElementById('qo-colors-container');
+    const price = parseInt(container.dataset.currentPrice) || 0;
+    const weightPerUnit = parseFloat(container.dataset.weight) || 0;
+
+    document.getElementById('qo-total-price').innerText = (price * calcQty).toLocaleString() + ' ₽';
+    if (weightPerUnit > 0) {
+        document.getElementById('qo-total-weight').innerText = 'Вес: ' + Math.round(weightPerUnit * calcQty).toLocaleString() + ' кг';
+    }
+};
+
+window.changeQOQty = function (step) {
+    const input = document.getElementById('qo-qty');
+    let val = parseInt(input.value);
+
+    // Если поле было пустым, а человек нажал + или -, начинаем счет с нуля
+    if (isNaN(val)) val = 0;
+
+    val += step;
+    if (val < 1) val = 1;
+    input.value = val;
+
+    window.updateQOTotals();
+};
+
 window.selectQOColor = function (dotEl) {
-    // Сбрасываем обводку со всех кружочков
     document.querySelectorAll('#qo-colors-container .color-dot').forEach(d => d.style.boxShadow = '0 0 0 1px #ccc');
-    // Делаем активным тот, по которому кликнули (добавляем черную обводку)
     dotEl.style.boxShadow = '0 0 0 2px #333';
 
-    // Меняем основную картинку товара на выбранный цвет
     document.getElementById('qo-img').src = dotEl.dataset.img;
-    // Обновляем текстовое название цвета
     document.getElementById('qo-color-name').innerText = dotEl.dataset.name;
-    // Обновляем цену (вдруг у другого цвета она отличается)
-    document.getElementById('qo-price').innerText = dotEl.dataset.price + ' ₽';
+    document.getElementById('qo-price-unit').innerHTML = `${dotEl.dataset.price} ₽ <span style="font-size:12px; color:#999; font-weight:600;">за ед.</span>`;
 
-    // Сохраняем технический ID цвета в контейнер, чтобы знать, что добавлять в корзину
-    document.getElementById('qo-colors-container').dataset.selectedColor = dotEl.dataset.color;
+    const container = document.getElementById('qo-colors-container');
+    container.dataset.selectedColor = dotEl.dataset.color;
+    container.dataset.currentPrice = dotEl.dataset.price; // Сохраняем новую цену для формулы
+
+    window.updateQOTotals(); // Сразу пересчитываем итог
 };
 
-// Функция управления счетчиком количества (+ и -)
-window.changeQOQty = function (step) {
-    // Находим инпут со значением
-    const input = document.getElementById('qo-qty');
-    let val = parseInt(input.value) || 1;
 
-    // Прибавляем или убавляем шаг (-1 или +1)
-    val += step;
-
-    // Защита: не даем заказать 0 или минус 1 товар
-    if (val < 1) val = 1;
-
-    // Возвращаем исправленное значение в инпут
-    input.value = val;
-};
-
-// Функция финального подтверждения (отправка данных в корзину)
 window.confirmQOAdd = function (productId) {
-    // Считываем сохраненный цвет
     const selectedColor = document.getElementById('qo-colors-container').dataset.selectedColor;
-    // Считываем введенное количество
-    const qty = parseInt(document.getElementById('qo-qty').value) || 1;
+    let qty = parseInt(document.getElementById('qo-qty').value);
 
-    // Вызываем нашу главную функцию добавления
-    addToCart(productId, selectedColor, qty);
+    // Финальная защита: если при отправке поле пустое или 0, кидаем в корзину минимум 1 единицу
+    if (isNaN(qty) || qty < 1) qty = 1;
 
-    // Закрываем окно (оно само откроет корзину через addToCart)
-    closeAllPopups();
+    if (typeof window.addToCart === 'function') {
+        window.addToCart(productId, selectedColor, qty);
+    }
+    window.closeAllPopups();
 };
-
 
 /* ==========================================================================
    БЛОК 6: АНИМАЦИИ И РОТАТОР КАРТИНОК
@@ -1150,6 +1238,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
+
+    // НОВЫЙ СЛУШАТЕЛЬ ДЛЯ ССЫЛОК ИЗ ФУТЕРА (работает без перезагрузки страницы)
+    window.addEventListener('hashchange', () => {
+        if (document.getElementById('catalog-root')) {
+            const hash = window.location.hash.replace('#', '');
+            const targetCat = hash ? hash : 'all';
+            const filterBtn = document.querySelector(`.filter-btn[data-cat="${targetCat}"]`);
+            if (filterBtn) filterBtn.click();
+        }
+    });
 
     const sortSelect = document.getElementById('sortSelect');
     if (sortSelect) {
