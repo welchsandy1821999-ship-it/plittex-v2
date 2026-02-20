@@ -286,3 +286,24 @@
     color: var(--text-color);
     text-align: center;
 }
+/* --- АДАПТИВ ДЛЯ БЛОКА ФОРМЫ (ПАРТНЕРЫ / КАТАЛОГ) --- */
+@media (max-width: 900px) {
+    .partners-grid {
+        grid-template-columns: 1fr !important; /* Выстраиваем в 1 колонку */
+        gap: 40px !important; /* Уменьшаем отступ между текстом и формой */
+    }
+    
+    .partners-info {
+        text-align: center; /* Центрируем текст на мобилках для красоты */
+    }
+
+    .partners-list li {
+        justify-content: center; /* Центрируем список преимуществ */
+    }
+}
+@media (max-width: 900px) {
+    .partners-grid {
+        grid-template-columns: 1fr !important;
+        gap: 40px !important;
+    }
+}

@@ -2,25 +2,26 @@
    БЛОК 1: ИМПОРТЫ И КОНФИГУРАЦИЯ ДАННЫХ
    ========================================================================== */
 import fullCatalog from '../data/catalog.json';
+// НОВОЕ: Подключаем базу объектов
 import galleryItemsData from '../data/objects.json';
 import newsData from '../data/news.json';
 
-// Выбираем 3 товара для главной страницы и принудительно раздаем им бейджи
+// 1. Берем именно те 3 товара, которые отлично смотрятся на главной
 const catalogData = fullCatalog.filter(item =>
     item.id === 's2' || item.id === 's8' || item.id === 'mg10'
 );
 
+// 2. Принудительно раздаем им бейджи, даже если в catalog.json они не указаны!
 catalogData.forEach(item => {
     if (item.id === 's2') item.badge = 'hit';
     if (item.id === 's8') item.badge = 'new';
     if (item.id === 'mg10') item.badge = 'sale';
 });
 
-// Карты цветов: HEX-коды и градиенты для отображения кружочков
 const COLOR_MAP = { 'gray': '#bbb', 'red': '#a52a2a', 'brown': '#6d4c41', 'black': '#222', 'white': '#fff', 'yellow': '#f1c40f', 'orange': '#e67e22', 'onyx': 'linear-gradient(135deg, #f1c40f, #c0392b)', 'autumn': 'linear-gradient(135deg, #ecf0f1, #2c3e50)', 'ruby': 'linear-gradient(135deg, #f39c12, #795548)', 'jasper': 'linear-gradient(135deg, #e67e22, #5d4037)', 'amber': 'linear-gradient(135deg, #795548, #212121)' };
 const COLOR_NAMES = { 'gray': 'Серый', 'red': 'Красный', 'brown': 'Коричневый', 'black': 'Черный', 'white': 'Белый', 'yellow': 'Желтый', 'orange': 'Оранжевый', 'onyx': 'Оникс', 'autumn': 'Осень', 'ruby': 'Рубин', 'jasper': 'Яшма', 'amber': 'Янтарь', 'mix': 'Микс' };
 
-// Конфигурация категорий для страницы Каталога
+/* Комментарий: Настройки категорий для страницы Каталога */
 const CATS_CONFIG = [
     { k: 'standart', t: 'Тротуарная плитка "СТАНДАРТ" Гладкая', groups: [{ id: '40', t: 'Толщина 40 мм' }, { id: '60', t: 'Толщина 60 мм' }, { id: '80', t: 'Толщина 80 мм' }] },
     { k: 'granit', t: 'Тротуарная плитка "СТАНДАРТ" С Гранитным фактурным слоем', groups: [{ id: '40', t: 'Толщина 40 мм' }, { id: '60', t: 'Толщина 60 мм' }, { id: '80', t: 'Толщина 80 мм' }] },
@@ -34,24 +35,16 @@ const CATS_CONFIG = [
 /* ==========================================================================
    БЛОК 2: ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И УТИЛИТЫ
    ========================================================================== */
-let cart = []; // Глобальный массив корзины
+let cart = [];
 const NO_PHOTO_SRC = 'assets/img/no-photo.jpg';
 
-/**
- * Глобальная функция обработки ошибок картинок (подставляет заглушку)
- * @param {HTMLImageElement} img - Элемент изображения
- */
+// Глобальная функция для обработки ошибок картинок (подставляет заглушку)
 window.handleImgError = function (img) {
     if (img && !img.src.includes(NO_PHOTO_SRC)) {
         img.src = NO_PHOTO_SRC;
     }
 };
 
-/**
- * Выводит всплывающее уведомление (Тост)
- * @param {string} message - Текст сообщения
- * @param {string} type - Тип: 'success', 'error' или 'info'
- */
 window.showToast = function (message, type = 'success') {
     const container = document.getElementById('toast-container');
     if (!container) return;
@@ -67,23 +60,26 @@ window.showToast = function (message, type = 'success') {
     }, 3000);
 }
 
-/**
- * Копирует текст реквизитов в буфер обмена и показывает уведомление
- * @param {HTMLElement} element - Иконка копирования, по которой кликнули
- */
+/* --- ФУНКЦИЯ КОПИРОВАНИЯ РЕКВИЗИТОВ С УВЕДОМЛЕНИЕМ --- */
 window.copyText = function (element) {
     const parent = element.parentElement;
     const textToCopy = parent.textContent.replace(element.textContent, '').trim();
 
     navigator.clipboard.writeText(textToCopy).then(() => {
+        // Меняем иконку на галочку
         const originalText = element.textContent;
         element.textContent = '✅';
         element.style.opacity = '1';
+
+        // Вызываем уведомление
         window.showToast(`Скопировано: <b>${textToCopy}</b>`);
+
+        // Возвращаем исходную иконку через 1.5 сек
         setTimeout(() => {
             element.textContent = originalText;
             element.style.opacity = '';
         }, 1500);
+
     }).catch(err => {
         console.error('Ошибка при копировании: ', err);
         window.showToast('Ошибка копирования', 'error');
@@ -94,20 +90,16 @@ window.copyText = function (element) {
 /* ==========================================================================
    БЛОК 3: НАВИГАЦИЯ, МЕНЮ И МОДАЛЬНЫЕ ОКНА
    ========================================================================== */
-
-/** Открывает и закрывает мобильное меню (Гамбургер) */
 window.toggleMobileMenu = function () {
     const nav = document.getElementById('mainNav');
     const btn = document.querySelector('.mobile-menu-btn');
     let overlay = document.querySelector('.mobile-menu-overlay');
-    
     if (!overlay) {
         overlay = document.createElement('div');
         overlay.className = 'mobile-menu-overlay';
         document.body.appendChild(overlay);
         overlay.addEventListener('click', toggleMobileMenu);
     }
-    
     if (!nav || !btn) return;
     const isActive = nav.classList.toggle('active');
     overlay.classList.toggle('active');
@@ -115,7 +107,6 @@ window.toggleMobileMenu = function () {
     document.body.style.overflow = isActive ? 'hidden' : '';
 };
 
-/** Принудительно закрывает мобильное меню */
 function closeMobileMenu() {
     const nav = document.getElementById('mainNav');
     const btn = document.querySelector('.mobile-menu-btn');
@@ -128,7 +119,6 @@ function closeMobileMenu() {
     }
 }
 
-/** Глобальная функция: Закрывает ВСЕ всплывающие окна, корзину и меню */
 function closeAllPopups() {
     document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
 
@@ -138,7 +128,9 @@ function closeAllPopups() {
     const lb = document.getElementById('lightbox-overlay') || document.getElementById('lightbox');
     if (lb && lb.classList.contains('active')) {
         lb.classList.remove('active');
-        setTimeout(() => { lb.style.display = 'none'; }, 300);
+        setTimeout(() => {
+            lb.style.display = 'none';
+        }, 300);
     }
 
     const d = document.getElementById('cartDrawer');
@@ -152,13 +144,15 @@ function closeAllPopups() {
     closeMobileMenu();
 
     const anyActive = document.querySelector('.modal.active, .cart-drawer.active');
-    if (!anyActive) document.body.style.overflow = '';
+    if (!anyActive) {
+        document.body.style.overflow = '';
+    }
 }
 window.closeAllPopups = closeAllPopups;
-window.closeLightbox = closeAllPopups;
-window.closeNewsModal = closeAllPopups;
 
-/** Открывает универсальный лайтбокс с картинкой и подписью */
+window.closeLightbox = function () { closeAllPopups(); };
+window.closeNewsModal = function () { closeAllPopups(); };
+
 window.openLightbox = function (src, caption) {
     const lb = document.getElementById('lightbox-overlay') || document.getElementById('lightbox');
     const img = document.getElementById('lightbox-img');
@@ -174,22 +168,29 @@ window.openLightbox = function (src, caption) {
     }
 };
 
-/** Открывает сертификат или проект в лайтбоксе, читая название из соседних тегов */
 window.openCert = function (el) {
     const img = (el.tagName === 'IMG') ? el : el.querySelector('img');
     if (img) {
         const card = el.closest('.news-card') || el.closest('.project-item') || el;
-        let title = card.querySelector('.news-title')?.innerText || card.querySelector('.project-title')?.innerText || img.alt || '';
-        window.openLightbox(img.src, title);
+        let title = card.querySelector('.news-title')?.innerText ||
+            card.querySelector('.project-title')?.innerText ||
+            img.alt || '';
+        openLightbox(img.src, title);
     }
 };
 
-/** Автономный лайтбокс для фото менеджеров в контактах (создается на лету) */
+/* --- АВТОНОМНЫЙ ЛАЙТБОКС ДЛЯ ФОТО КОНТАКТОВ (вынесен из DOMContentLoaded) --- */
 window.openManagerPhoto = function (imgElement) {
+    // Ищем существующий фон лайтбокса в DOM
     let overlay = document.getElementById('fast-lightbox');
+
+    // Если фона нет — создаем его и настраиваем всю логику (выполнится один раз)
     if (!overlay) {
+        // Создаем главный контейнер-фон
         overlay = document.createElement('div');
         overlay.id = 'fast-lightbox';
+
+        // Задаем стили для затемнения на весь экран
         overlay.style.position = 'fixed';
         overlay.style.top = '0';
         overlay.style.left = '0';
@@ -200,12 +201,15 @@ window.openManagerPhoto = function (imgElement) {
         overlay.style.display = 'flex';
         overlay.style.alignItems = 'center';
         overlay.style.justifyContent = 'center';
-        overlay.style.cursor = 'zoom-out';
+        overlay.style.cursor = 'zoom-out'; // Курсор-минус для закрытия
         overlay.style.opacity = '0';
         overlay.style.transition = 'opacity 0.3s ease';
 
+        // Создаем тег для увеличенного изображения
         const img = document.createElement('img');
         img.id = 'fast-lightbox-img';
+
+        // Задаем стили для картинки (размер, тень, анимация масштаба)
         img.style.maxWidth = '90%';
         img.style.maxHeight = '90%';
         img.style.borderRadius = '12px';
@@ -214,24 +218,39 @@ window.openManagerPhoto = function (imgElement) {
         img.style.transform = 'scale(0.9)';
         img.style.transition = 'transform 0.3s ease';
 
+        // Добавляем элементы в структуру документа
         overlay.appendChild(img);
         document.body.appendChild(overlay);
 
-        const closeFastLightbox = function () {
+        // Выносим логику закрытия в отдельную функцию для переиспользования
+        const closeLightbox = function () {
+            // Запускаем обратную анимацию исчезновения
             overlay.style.opacity = '0';
             img.style.transform = 'scale(0.9)';
+            // Убираем блок из потока после завершения анимации
             setTimeout(() => { overlay.style.display = 'none'; }, 300);
         };
 
-        overlay.onclick = closeFastLightbox;
+        // Назначаем закрытие по клику мыши (в любую область фона или фото)
+        overlay.onclick = closeLightbox;
+
+        // Назначаем глобальное закрытие по нажатию клавиши Esc
         document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && overlay.style.display === 'flex') closeFastLightbox();
+            // Проверяем, что нажата именно Escape и лайтбокс сейчас видим
+            if (e.key === 'Escape' && overlay.style.display === 'flex') {
+                closeLightbox();
+            }
         });
     }
 
+    // Берем ссылку на картинку, по которой кликнули, и обновляем источник в лайтбоксе
     const imgElementToZoom = document.getElementById('fast-lightbox-img');
     imgElementToZoom.src = imgElement.src;
+
+    // Показываем блок на экране
     overlay.style.display = 'flex';
+
+    // Запускаем плавную анимацию появления с минимальной задержкой для срабатывания CSS transition
     setTimeout(() => {
         overlay.style.opacity = '1';
         imgElementToZoom.style.transform = 'scale(1)';
@@ -242,14 +261,11 @@ window.openManagerPhoto = function (imgElement) {
 /* ==========================================================================
    БЛОК 4: ГЕНЕРАЦИЯ КАТАЛОГА, ПОИСК И ФИЛЬТРЫ
    ========================================================================== */
-
-/** Меняет главное фото в карточке при наведении на кружок цвета */
 window.setImg = (id, src) => {
     const img = document.getElementById('img-' + id);
     if (img) img.src = src;
 };
 
-/** Генерирует HTML блок с ценами для карточки товара */
 function generatePriceHTML(prices) {
     let html = '';
     if (prices['mix']) {
@@ -266,10 +282,10 @@ function generatePriceHTML(prices) {
     return html;
 }
 
-/** Отрисовывает блок "Популярные товары" на главной странице */
 function renderFeaturedProducts() {
     const root = document.getElementById('featured-products-root');
     if (!root) return;
+
     root.innerHTML = '';
 
     catalogData.forEach(item => {
@@ -287,12 +303,17 @@ function renderFeaturedProducts() {
         dots += '</div>';
 
         const defImg = item.prices['mix'] ? 'onyx' : 'gray';
+
         let badgeHtml = '';
         const b = item.badge ? item.badge.toLowerCase() : '';
 
-        if (b === 'hit') badgeHtml = `<div class="prod-badge badge-hit">ХИТ</div>`;
-        else if (b === 'new') badgeHtml = `<div class="prod-badge badge-new">НОВИНКА</div>`;
-        else if (b === 'sale' || b === 'action' || b === 'promo') badgeHtml = `<div class="prod-badge badge-sale">АКЦИЯ</div>`;
+        if (b === 'hit') {
+            badgeHtml = `<div class="prod-badge badge-hit">ХИТ</div>`;
+        } else if (b === 'new') {
+            badgeHtml = `<div class="prod-badge badge-new">НОВИНКА</div>`;
+        } else if (b === 'sale' || b === 'action' || b === 'promo') {
+            badgeHtml = `<div class="prod-badge badge-sale">АКЦИЯ</div>`;
+        }
 
         card.innerHTML = `
             ${badgeHtml}
@@ -316,29 +337,37 @@ function renderFeaturedProducts() {
     });
 }
 
-/** Загружает и отрисовывает отзывы из JSON файла */
+// Функция загрузки и рендера отзывов
 async function loadReviews() {
     const visibleContainer = document.getElementById('visible-reviews');
     const hiddenContainer = document.getElementById('hiddenReviews');
+
+    // Если на странице нет блока отзывов, прерываем выполнение
     if (!visibleContainer || !hiddenContainer) return;
 
     try {
         const response = await fetch('./data/reviews.json');
         const reviews = await response.json();
+
+        // Цветовые схемы для аватарок (как было в твоем оригинальном HTML)
         const colorSchemes = [
-            { bg: '#f0f7fc', color: 'var(--primary-color)' }, 
-            { bg: '#fcf0fc', color: '#9b59b6' },             
-            { bg: '#fdf2f2', color: '#e74c3c' }              
+            { bg: '#f0f7fc', color: 'var(--primary-color)' }, // Синий
+            { bg: '#fcf0fc', color: '#9b59b6' },             // Фиолетовый
+            { bg: '#fdf2f2', color: '#e74c3c' }              // Красный
         ];
 
         let visibleHtml = '';
         let hiddenHtml = '';
 
         reviews.forEach((review, index) => {
+            // Берем первую букву имени для аватарки
             const firstLetter = review.author.charAt(0).toUpperCase();
+            // Чередуем цвета по кругу
             const colors = colorSchemes[index % colorSchemes.length];
+            // Генерируем звезды (от 1 до 5)
             const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
 
+            // Собираем карточку точь-в-точь как в твоем HTML
             const cardHtml = `
                 <div class="review-card p-card">
                     <div class="review-header">
@@ -352,33 +381,41 @@ async function loadReviews() {
                         <p class="review-text">${review.text}</p>
                     </div>
                     <button class="review-toggle-btn js-toggle-text">Читать полностью</button>
-                </div>`;
+                </div>
+            `;
 
-            if (index < 3) visibleHtml += cardHtml;
-            else hiddenHtml += cardHtml;
+            // Первые 3 отзыва кидаем в видимый блок, остальные — в скрытый
+            if (index < 3) {
+                visibleHtml += cardHtml;
+            } else {
+                hiddenHtml += cardHtml;
+            }
         });
 
         visibleContainer.innerHTML = visibleHtml;
         hiddenContainer.innerHTML = hiddenHtml;
+
     } catch (error) {
         console.error('Ошибка при загрузке отзывов:', error);
     }
 }
 
-/** Главная функция: Собирает весь каталог с учетом поиска и сортировки */
 window.renderCatalog = function () {
     const catalogRoot = document.getElementById('catalog-root');
     if (!catalogRoot) return;
 
     catalogRoot.innerHTML = '';
+
+    // 1. Читаем текущее значение поиска
     const searchInput = document.getElementById('searchInput');
     const rawSearchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
     const terms = rawSearchTerm.split(/\s+/).filter(t => t.length > 0);
 
+    // 2. Читаем текущую сортировку
     const sortSelect = document.getElementById('sortSelect');
     const sortMode = sortSelect ? sortSelect.value : 'default';
 
-    let totalItemsFound = 0; 
+    let totalItemsFound = 0; // НОВОЕ: Счетчик найденных товаров
 
     CATS_CONFIG.forEach(c => {
         const wrapper = document.createElement('div');
@@ -389,9 +426,10 @@ window.renderCatalog = function () {
         let categoryHasItems = false;
 
         c.groups.forEach(g => {
+            // Базовый фильтр по категории
             let items = fullCatalog.filter(i => i.cat === c.k && i.grp === g.id);
 
-            // Фильтрация по поиску
+            // ФИЛЬТРАЦИЯ ПО ПОИСКУ
             if (terms.length > 0) {
                 items = items.filter(item => {
                     const lowerName = item.n.toLowerCase();
@@ -408,9 +446,9 @@ window.renderCatalog = function () {
             if (items.length === 0) return;
 
             categoryHasItems = true;
-            totalItemsFound += items.length;
+            totalItemsFound += items.length; // НОВОЕ: Плюсуем найденные товары
 
-            // Сортировка по цене
+            // СОРТИРОВКА (Дешевле / Дороже)
             items.sort((a, b) => {
                 const getPrice = (p) => {
                     const prices = p.prices['mix'] ? [p.prices['mix']] : Object.values(p.prices);
@@ -418,7 +456,7 @@ window.renderCatalog = function () {
                 };
                 if (sortMode === 'price_asc') return getPrice(a) - getPrice(b);
                 if (sortMode === 'price_desc') return getPrice(b) - getPrice(a);
-                return 0;
+                return 0; // default
             });
 
             const subHeader = document.createElement('div');
@@ -460,19 +498,17 @@ window.renderCatalog = function () {
                 card.innerHTML = `
                      ${badgeHtml}
                      <div class="pc-head" onclick="window.openLightbox(this.querySelector('img').src, '${safeName}')" style="cursor:zoom-in;">
-                        <img src="${basePath}${defaultImg}.png" loading="lazy" decoding="async" id="img-${item.id}" class="pc-img" alt="${item.n}" onerror="window.handleImgError(this)">                    
-                     </div>
-                     <div class="pc-body">
-                        <div class="pc-title">${item.n}</div>
+                        <img src="${basePath}${defaultImg}.png" loading="lazy" decoding="async" id="img-${item.id}" class="pc-img" alt="${item.n}" onerror="window.handleImgError(this)">                    </div>
+                    <div class="pc-body">
+                    <div class="pc-title">${item.n}</div>
                         <table class="specs-table">
                             <tr><td>Размер:</td><td>${item.s}</td></tr>
                             <tr><td>На поддоне:</td><td>${item.q} ${item.u}</td></tr>
                             <tr><td>Вес поддона:</td><td>${item.w} кг</td></tr>
                         </table>
-                        ${dotsHtml}
-                        <div class="price-list">${priceHtml}</div>
-                        <button class="btn btn--primary full-width" onclick="window.openQuickOrder('${item.id}')">В корзину</button>                    
-                     </div>
+                    ${dotsHtml}
+                    <div class="price-list">${priceHtml}</div>
+<button class="btn btn--primary full-width" onclick="window.openQuickOrder('${item.id}')">В корзину</button>                    </div>
                 `;
                 grid.appendChild(card);
             });
@@ -482,7 +518,7 @@ window.renderCatalog = function () {
         if (categoryHasItems) catalogRoot.appendChild(wrapper);
     });
 
-    // Заглушка, если ничего не найдено
+    // НОВОЕ: ЕСЛИ НИЧЕГО НЕ НАЙДЕНО — ВЫВОДИМ ЗАГЛУШКУ
     if (totalItemsFound === 0) {
         catalogRoot.innerHTML = `
             <div style="text-align: center; padding: 80px 20px; background: #fff; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-top: 20px;">
@@ -499,13 +535,13 @@ window.renderCatalog = function () {
     window.initScrollAnimations();
 };
 
-/** Очищает строку от спецсимволов для умного поиска */
+// Железобетонная очистка: удаляет всё, кроме русских/английских букв и цифр (через Unicode)
 window.cleanText = function (str) {
     if (!str) return '';
     return str.toLowerCase().replace(/[^\u0410-\u044F\u0401\u0451a-zA-Z0-9]/gi, '');
 };
 
-/** Обработка ввода в строку поиска */
+// 1. Логика живого поиска
 window.handleSearch = function (val) {
     const dropdown = document.getElementById('searchDropdown');
     if (!dropdown) return;
@@ -513,23 +549,31 @@ window.handleSearch = function (val) {
     const rawSearchTerm = val.toLowerCase().trim();
     const terms = rawSearchTerm.split(/\s+/).filter(t => t.length > 0);
 
+    // Если поиск пуст - скрываем дропдаун и показываем весь каталог
     if (terms.length === 0) {
         dropdown.classList.remove('active');
         window.renderCatalog();
         return;
     }
 
+    // Ищем совпадения
     const matches = fullCatalog.filter(item => {
         const lowerName = item.n.toLowerCase();
         const cleanedName = window.cleanText(item.n);
+
+        // Строгое совпадение кусков текста
         const basicMatch = terms.every(term => lowerName.includes(term));
+
+        // Умное совпадение (игнорируем точки, пробелы, дефисы)
         const fuzzyMatch = terms.every(term => {
             const cleanTerm = window.cleanText(term);
             return cleanedName.includes(cleanTerm);
         });
+
         return basicMatch || fuzzyMatch;
     });
 
+    // Рисуем результаты в дропдауне
     if (matches.length > 0) {
         let html = '';
         matches.slice(0, 5).forEach(item => {
@@ -545,17 +589,19 @@ window.handleSearch = function (val) {
     } else {
         dropdown.classList.remove('active');
     }
+
+    // Обязательно перерисовываем каталог, чтобы на странице остались только найденные карточки
     window.renderCatalog();
 };
 
-/** Сброс поиска по кнопке в заглушке */
+/* Комментарий: Функция для сброса поиска (вызывается по кнопке из заглушки) */
 window.resetSearch = function () {
     const searchInput = document.getElementById('searchInput');
-    if (searchInput) searchInput.value = ''; 
-    window.handleSearch(''); 
+    if (searchInput) searchInput.value = ''; // Очищаем поле
+    window.handleSearch(''); // Запускаем пустой поиск (возвращает весь каталог)
 };
 
-/** Переход к конкретному товару из выпадающего списка поиска */
+// 2. Переход к конкретному товару
 window.goToProduct = function (itemId, catId) {
     const searchInput = document.getElementById('searchInput');
     if (searchInput) searchInput.value = '';
@@ -580,7 +626,7 @@ window.goToProduct = function (itemId, catId) {
     }, 100);
 };
 
-/** Переключение видимости категорий каталога */
+// 3. Логика переключения фильтров категорий
 window.applyFilter = function (catId) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     const filterBtn = document.querySelector(`.filter-btn[data-cat="${catId}"]`);
@@ -615,6 +661,8 @@ window.addToCart = function (productId, colorId = 'gray', quantity = 1) {
     const colorName = COLOR_NAMES[colorId] || 'Не указан';
     const price = product.prices[colorId] || product.prices['mix'] || 0;
     const thumb = `assets/img/catalog/${product.col}/${product.form}/${colorId}.png`;
+
+    // ПРАВИЛЬНЫЙ РАСЧЕТ ВЕСА: Вес поддона делим на количество в поддоне
     const unitWeight = (parseFloat(product.w) || 0) / (parseFloat(product.q) || 1);
 
     const existingItem = cart.find(item => item.id === productId && item.color === colorName);
@@ -656,6 +704,7 @@ function saveCart() {
     localStorage.setItem('plittex_cart', JSON.stringify(cart));
     renderCart();
 
+    // Добавляем класс анимации на синюю плавающую кнопку
     const stickyCart = document.getElementById('stickyCart');
     if (stickyCart) {
         stickyCart.classList.add('cart-bounce');
@@ -666,7 +715,7 @@ function saveCart() {
 window.delCart = (i) => { cart.splice(i, 1); saveCart(); };
 window.clearCart = () => { if (confirm('Очистить корзину?')) { cart = []; saveCart(); toggleCart(); } };
 
-/** Отрисовывает содержимое боковой корзины */
+/* --- 1. УМНАЯ ОТРИСОВКА КОРЗИНЫ --- */
 function renderCart() {
     const w = document.getElementById('cartItems');
     const s = document.getElementById('stickyCart');
@@ -715,6 +764,8 @@ function renderCart() {
     setText('scTotal', sum.toLocaleString() + ' ₽');
     setText('scCount', cart.length);
     setText('cartHeaderQty', `(${cart.length})`);
+
+    // Обновляем новую серую плашку статистики в боковой корзине
     setText('cartTotalQty', qty);
     setText('cartTotalWeight', Math.round(wgt).toLocaleString() + ' кг');
     setText('cartTotalPallets', `${fp} цел. + ${pp} неполн.`);
@@ -723,8 +774,15 @@ function renderCart() {
     if (ord) ord.value = JSON.stringify(cart);
 }
 
+/* ==========================================
+   ФУНКЦИЯ УМНОГО ИЗМЕНЕНИЯ КОЛИЧЕСТВА
+   ========================================== */
+/* ==========================================
+   ФУНКЦИЯ УМНОГО ИЗМЕНЕНИЯ КОЛИЧЕСТВА
+   ========================================== */
 window.changeCartQty = function (index, step) {
     if (!cart[index]) return;
+
     cart[index].qty += step;
     if (cart[index].qty < 1) cart[index].qty = 1;
 
@@ -732,21 +790,22 @@ window.changeCartQty = function (index, step) {
 
     const product = fullCatalog.find(p => p.id === cart[index].id);
     if (product) {
+        // ПРАВИЛЬНЫЙ ПЕРЕСЧЕТ ВЕСА
         const unitWeight = (parseFloat(product.w) || 0) / (parseFloat(product.q) || 1);
         cart[index].weight = unitWeight * cart[index].qty;
         cart[index].pallets = ((1 / (parseFloat(product.q) || 1)) * cart[index].qty).toFixed(2);
     }
 
     saveCart();
-    renderCart();
+    renderCart(); // Мгновенно обновляем плашку статистики
 };
-
-/* --- ЛОГИКА КАЛЬКУЛЯТОРА И БЫСТРОГО ЗАКАЗА --- */
+// --- ЛОГИКА КАЛЬКУЛЯТОРА ---
 let currentCalcProduct = null;
 
 window.addToCartPrep = function (productId) {
     const product = fullCatalog.find(p => p.id === productId);
     if (!product) return;
+
     currentCalcProduct = product;
 
     const modal = document.getElementById('calcModal');
@@ -757,16 +816,20 @@ window.addToCartPrep = function (productId) {
     if (modal && title && select) {
         title.innerText = product.n;
         qtyInput.value = 1;
+
+        // Заполняем список цветов
         let colors = product.prices['mix'] ? ['onyx', 'autumn', 'ruby', 'jasper', 'amber'] : Object.keys(product.prices);
         select.innerHTML = colors.map(c => `<option value="${c}">${COLOR_NAMES[c]}</option>`).join('');
+
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
-        window.updateCalcPreview();
+        window.updateCalcPreview(); // Считаем сразу при открытии
     }
 };
 
 window.updateCalcPreview = function () {
     if (!currentCalcProduct) return;
+
     const color = document.getElementById('calcColorSelect').value;
     const qty = parseFloat(document.getElementById('calcQty').value) || 0;
     const preview = document.getElementById('liveCalcPreview');
@@ -776,20 +839,25 @@ window.updateCalcPreview = function () {
     const qtyInPallet = parseFloat(currentCalcProduct.q) || 1;
 
     const totalSum = Math.round(qty * price);
-    const totalWeight = Math.round(qty * (weightPerUnit / qtyInPallet));
+    const totalWeight = Math.round(qty * (weightPerUnit / qtyInPallet)); // Расчет веса от кол-ва
 
     document.getElementById('liveSum').innerText = totalSum.toLocaleString() + ' ₽';
     document.getElementById('liveWeight').innerText = totalWeight.toLocaleString() + ' кг';
+
     if (qty > 0) preview.style.display = 'flex';
 };
 
 window.confirmCalcAddToCart = function () {
     if (!currentCalcProduct) return;
+
     const color = document.getElementById('calcColorSelect').value;
     const qty = parseFloat(document.getElementById('calcQty').value) || 1;
+
+    // Вызываем оригинальную функцию корзины, передавая ей нужные данные
     if (typeof window.addToCart === 'function') {
         window.addToCart(currentCalcProduct.id, color, qty);
     }
+
     window.closeAllPopups();
 };
 
@@ -800,6 +868,7 @@ document.querySelectorAll('.js-close-calc').forEach(el => {
     };
 });
 
+/* --- 2. УМНОЕ ОКНО ДОБАВЛЕНИЯ В ЗАКАЗ (БЕЗ ДУБЛЕЙ) --- */
 window.openQuickOrder = function (productId) {
     const product = fullCatalog.find(p => p.id === productId);
     if (!product) return;
@@ -810,7 +879,10 @@ window.openQuickOrder = function (productId) {
     const colorsList = product.prices['mix'] ? ['onyx', 'autumn', 'ruby', 'jasper', 'amber'] : Object.keys(product.prices);
     const defColor = colorsList[0];
     const basePath = `assets/img/catalog/${product.col}/${product.form}/`;
+
     const startPrice = product.prices[defColor] || product.prices['mix'];
+
+    // ПРАВИЛЬНЫЙ СТАРТОВЫЙ ВЕС
     const unitWeight = (parseFloat(product.w) || 0) / (parseFloat(product.q) || 1);
 
     const modal = document.createElement('div');
@@ -819,8 +891,10 @@ window.openQuickOrder = function (productId) {
 
     modal.innerHTML = `
     <div class="modal-overlay" onclick="closeAllPopups()"></div>
+    
     <div class="modal-container" style="max-width: 480px; padding: 0; border-radius: 16px; overflow: hidden;">
         <button class="modal-close" onclick="closeAllPopups()" style="top: 15px; right: 15px; background: #fff; border-radius: 50%; width: 32px; height: 32px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">✕</button>
+        
         <div style="background: #f8f9fa; padding: 25px 30px; border-bottom: 1px solid #eee; display: flex; gap: 20px; align-items: center;">
             <img id="qo-img" src="${basePath}${defColor}.png" onerror="window.handleImgError(this)" style="width: 110px; height: 110px; object-fit: contain; border-radius: 12px; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); padding: 5px;">
             <div>
@@ -829,20 +903,27 @@ window.openQuickOrder = function (productId) {
                 <div id="qo-price-unit" style="font-size: 18px; font-weight: 900; color: var(--primary-color);">${startPrice} ₽ <span style="font-size:12px; color:#999; font-weight:600;">за ${product.u}</span></div>
             </div>
         </div>
+
         <div style="padding: 25px 30px;">
             <div style="margin-bottom: 25px;">
                 <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px;">
                     <span style="font-size: 12px; color: #888; font-weight: 700; text-transform: uppercase;">Цвет: <span id="qo-color-name" style="color: #333;">${COLOR_NAMES[defColor]}</span></span>
                 </div>
+                
                 <div class="pc-colors" id="qo-colors-container" data-selected-color="${defColor}" data-current-price="${startPrice}" data-weight="${unitWeight}">
                     ${colorsList.map(c => `
                         <div class="color-dot ${c === defColor ? 'active' : ''}" 
                              style="background:${COLOR_MAP[c]}; width: 38px; height: 38px; ${c === defColor ? 'box-shadow: 0 0 0 2px #333;' : ''}" 
-                             data-color="${c}" data-price="${product.prices[c] || product.prices['mix']}" data-name="${COLOR_NAMES[c]}" data-img="${basePath}${c}.png" onclick="window.selectQOColor(this)">
+                             data-color="${c}" 
+                             data-price="${product.prices[c] || product.prices['mix']}"
+                             data-name="${COLOR_NAMES[c]}"
+                             data-img="${basePath}${c}.png"
+                             onclick="window.selectQOColor(this)">
                         </div>
                     `).join('')}
                 </div>
             </div>
+
             <div style="display: flex; gap: 10px; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; background: #fbfbfb; padding: 15px; border-radius: 12px; border: 1px solid #eee;">
                 <div>
                     <div style="font-size: 11px; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Количество (${product.u}):</div>
@@ -852,23 +933,33 @@ window.openQuickOrder = function (productId) {
                         <button onclick="window.changeQOQty(1)" style="width: 36px; height: 36px; background: #f8f9fa; border: none; font-size: 18px; cursor: pointer; color: #555; display: flex; align-items: center; justify-content: center; padding: 0;">+</button>
                     </div>
                 </div>
+                
                 <div style="text-align: right; flex-shrink: 0;">
                     <div style="font-size: 11px; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 6px;">Итого:</div>
                     <div id="qo-total-price" style="font-size: 22px; font-weight: 900; color: #333; line-height: 1;">${startPrice.toLocaleString()} ₽</div>
                     <div id="qo-total-weight" style="font-size: 12px; color: #999; margin-top: 6px;">Вес: ${Math.round(unitWeight).toLocaleString()} кг</div>
                 </div>
             </div>
+
             <button onclick="window.confirmQOAdd('${product.id}')" class="btn btn--primary" style="width: 100%; padding: 16px; font-size: 15px; border-radius: 50px;">ДОБАВИТЬ В КОРЗИНУ</button>
         </div>
     </div>`;
+
     document.body.appendChild(modal);
     document.body.style.overflow = 'hidden';
-    setTimeout(() => { const input = document.getElementById('qo-qty'); if (input) input.focus(); }, 100);
+
+    setTimeout(() => {
+        const input = document.getElementById('qo-qty');
+        if (input) input.focus();
+    }, 100);
 };
 
+// --- ФУНКЦИЯ ЖИВОГО ПЕРЕСЧЕТА ИТОГОВ ---
 window.updateQOTotals = function () {
     const input = document.getElementById('qo-qty');
     let qty = parseInt(input.value);
+
+    // Если поле пустое (NaN), берем 1 для расчета цены, но в самом поле оставляем пустоту
     let calcQty = isNaN(qty) ? 1 : qty;
     if (calcQty < 0) calcQty = 0;
 
@@ -885,46 +976,59 @@ window.updateQOTotals = function () {
 window.changeQOQty = function (step) {
     const input = document.getElementById('qo-qty');
     let val = parseInt(input.value);
+
+    // Если поле было пустым, а человек нажал + или -, начинаем счет с нуля
     if (isNaN(val)) val = 0;
+
     val += step;
     if (val < 1) val = 1;
     input.value = val;
+
     window.updateQOTotals();
 };
 
 window.selectQOColor = function (dotEl) {
     document.querySelectorAll('#qo-colors-container .color-dot').forEach(d => d.style.boxShadow = '0 0 0 1px #ccc');
     dotEl.style.boxShadow = '0 0 0 2px #333';
+
     document.getElementById('qo-img').src = dotEl.dataset.img;
     document.getElementById('qo-color-name').innerText = dotEl.dataset.name;
     document.getElementById('qo-price-unit').innerHTML = `${dotEl.dataset.price} ₽ <span style="font-size:12px; color:#999; font-weight:600;">за ед.</span>`;
+
     const container = document.getElementById('qo-colors-container');
     container.dataset.selectedColor = dotEl.dataset.color;
-    container.dataset.currentPrice = dotEl.dataset.price; 
-    window.updateQOTotals(); 
+    container.dataset.currentPrice = dotEl.dataset.price; // Сохраняем новую цену для формулы
+
+    window.updateQOTotals(); // Сразу пересчитываем итог
 };
+
 
 window.confirmQOAdd = function (productId) {
     const selectedColor = document.getElementById('qo-colors-container').dataset.selectedColor;
     let qty = parseInt(document.getElementById('qo-qty').value);
+
+    // Финальная защита: если при отправке поле пустое или 0, кидаем в корзину минимум 1 единицу
     if (isNaN(qty) || qty < 1) qty = 1;
+
     if (typeof window.addToCart === 'function') {
         window.addToCart(productId, selectedColor, qty);
     }
     window.closeAllPopups();
 };
 
-
 /* ==========================================================================
    БЛОК 6: АНИМАЦИИ И РОТАТОР КАРТИНОК
    ========================================================================== */
-
-/** Инициализация анимаций появления блоков при скролле */
+// 2. УНИВЕРСАЛЬНАЯ АНИМАЦИЯ ПОЯВЛЕНИЯ
 window.initScrollAnimations = function () {
+    // Скрипт следит только за базовыми классами-контейнерами
     const elementsToAnimate = document.querySelectorAll(`
-            .feature-card:not(.observed), .p-card:not(.observed), 
-            .b-card:not(.observed), .prod-card:not(.observed), 
-            .news-card:not(.observed), .cc-card:not(.observed),
+            .feature-card:not(.observed), 
+            .p-card:not(.observed), 
+            .b-card:not(.observed), 
+            .prod-card:not(.observed), 
+            .news-card:not(.observed), 
+            .cc-card:not(.observed),
             .animate-block:not(.observed)
         `);
 
@@ -940,25 +1044,29 @@ window.initScrollAnimations = function () {
 
         elementsToAnimate.forEach((el, index) => {
             el.classList.add('animate-on-scroll', 'observed');
+            // Автоматическая задержка: карточки в ряду всплывают по очереди
             el.style.animationDelay = `${(index % 4) * 0.1}s`;
             scrollObserver.observe(el);
         });
     }
 };
 
-/** Анимация бегущих цифр в блоках статистики */
 function animateValue(obj, start, end, duration) {
     let startTimestamp = null;
     const isDecimal = obj.getAttribute('data-decimal');
+
     const rawText = obj.innerText || '';
     const suffix = rawText.includes('+') ? '+' : (rawText.includes('%') ? '%' : '');
 
     const step = (timestamp) => {
         if (!startTimestamp) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+
         const easeOut = 1 - Math.pow(1 - progress, 4);
         const currentVal = easeOut * (end - start) + start;
+
         obj.innerText = (isDecimal ? currentVal.toFixed(1) : Math.floor(currentVal).toLocaleString('ru-RU')) + suffix;
+
         if (progress < 1) window.requestAnimationFrame(step);
     };
     window.requestAnimationFrame(step);
@@ -1000,12 +1108,15 @@ function rotateImages() {
     rotators.forEach(item => {
         const imgEl = document.getElementById(item.id);
         if (!imgEl) return;
+
         imgEl.classList.add('fade-out');
+
         setTimeout(() => {
             let newSrc;
             do {
                 newSrc = item.pool[Math.floor(Math.random() * item.pool.length)];
             } while (newSrc === imgEl.getAttribute('src') && item.pool.length > 1);
+
             imgEl.src = newSrc;
             imgEl.onload = () => imgEl.classList.remove('fade-out');
             imgEl.onerror = () => imgEl.classList.remove('fade-out');
@@ -1050,7 +1161,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 8.1. БАЗОВАЯ ИНИЦИАЛИЗАЦИЯ И СЛУШАТЕЛИ ---
     document.querySelectorAll('.news-img, .project-item img').forEach(img => {
-        img.addEventListener('error', function () { window.handleImgError(this); });
+        img.addEventListener('error', function () {
+            window.handleImgError(this);
+        });
     });
 
     loadCart();
@@ -1064,7 +1177,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const lb = document.getElementById('lightbox-overlay') || document.getElementById('lightbox');
     if (lb) {
         lb.onclick = (e) => {
-            if (e.target === lb || e.target.tagName === 'IMG' || e.target.classList.contains('lightbox-close')) closeAllPopups();
+            if (e.target === lb || e.target.tagName === 'IMG' || e.target.classList.contains('lightbox-close')) {
+                closeAllPopups();
+            }
         };
     }
 
@@ -1097,6 +1212,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     });
 
+
     // --- 8.2. ИНИЦИАЛИЗАЦИЯ КАТАЛОГА И ПОИСКА ---
     if (document.getElementById('catalog-root')) {
         window.renderCatalog();
@@ -1107,17 +1223,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if (productId) {
             const product = fullCatalog.find(p => p.id === productId);
             if (product) {
-                setTimeout(() => { window.goToProduct(product.id, product.cat); }, 300);
+                setTimeout(() => {
+                    window.goToProduct(product.id, product.cat);
+                }, 300);
             }
-        } else {
+        }
+        else {
             const hash = window.location.hash.replace('#', '');
             if (hash) {
                 const filterBtn = document.querySelector(`.filter-btn[data-cat="${hash}"]`);
-                if (filterBtn) setTimeout(() => filterBtn.click(), 100);
+                if (filterBtn) {
+                    setTimeout(() => filterBtn.click(), 100);
+                }
             }
         }
     }
 
+    // НОВЫЙ СЛУШАТЕЛЬ ДЛЯ ССЫЛОК ИЗ ФУТЕРА (работает без перезагрузки страницы)
     window.addEventListener('hashchange', () => {
         if (document.getElementById('catalog-root')) {
             const hash = window.location.hash.replace('#', '');
@@ -1128,7 +1250,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const sortSelect = document.getElementById('sortSelect');
-    if (sortSelect) sortSelect.addEventListener('change', window.renderCatalog);
+    if (sortSelect) {
+        sortSelect.addEventListener('change', () => {
+            window.renderCatalog();
+        });
+    }
 
     document.querySelectorAll('.filter-btn[data-cat]').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -1141,13 +1267,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (cat === 'all') {
                 window.history.replaceState(null, null, window.location.pathname + window.location.search);
+            } else {
+                window.history.replaceState(null, null, '#' + cat);
+            }
+
+            if (cat === 'all') {
                 const controls = document.querySelector('.catalog-controls');
                 if (controls) {
                     const y = controls.closest('.section-padding').getBoundingClientRect().top + window.pageYOffset - 5;
                     window.scrollTo({ top: y, behavior: 'smooth' });
                 }
             } else {
-                window.history.replaceState(null, null, '#' + cat);
                 const target = document.getElementById('cat-' + cat);
                 if (target) {
                     const y = target.getBoundingClientRect().top + window.pageYOffset - 240;
@@ -1159,20 +1289,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const searchInputEl = document.getElementById('searchInput');
     if (searchInputEl) {
-        searchInputEl.addEventListener('input', (e) => window.handleSearch(e.target.value));
+        searchInputEl.addEventListener('input', (e) => {
+            window.handleSearch(e.target.value);
+        });
         searchInputEl.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') { e.target.value = ''; window.handleSearch(''); }
+            if (e.key === 'Escape') {
+                e.target.value = '';
+                window.handleSearch('');
+            }
         });
     }
 
-    if (document.getElementById('featured-products-root')) renderFeaturedProducts();
+    if (document.getElementById('featured-products-root')) {
+        renderFeaturedProducts();
+    }
 
 
-    // --- 8.3. ИНИЦИАЛИЗАЦИЯ АНИМАЦИЙ ---
+    // --- 8.3. ИНИЦИАЛИЗАЦИЯ АНИМАЦИЙ (Обозреватели) ---
+
+    // Запускаем сразу для тех элементов, что уже есть в HTML
     window.initScrollAnimations();
 
     document.querySelectorAll('.stats-container, .grid-4, .stat-number').forEach(grid => {
-        if (typeof appearanceObserver !== 'undefined') appearanceObserver.observe(grid);
+        if (typeof appearanceObserver !== 'undefined') {
+            appearanceObserver.observe(grid);
+        }
     });
 
     const projectsSec = document.getElementById('projectsSection');
@@ -1182,23 +1323,34 @@ document.addEventListener('DOMContentLoaded', () => {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    if (!intervalId) { rotateImages(); intervalId = setInterval(rotateImages, 5000); }
+                    if (!intervalId) {
+                        rotateImages();
+                        intervalId = setInterval(rotateImages, 5000);
+                    }
                 } else {
-                    if (intervalId) { clearInterval(intervalId); intervalId = null; }
+                    if (intervalId) {
+                        clearInterval(intervalId);
+                        intervalId = null;
+                    }
                 }
             });
         }, { threshold: 0.1 });
         observer.observe(projectsSec);
     }
 
-    // --- 8.4. ЛОГИКА СТРАНИЦЫ "О ЗАВОДЕ" ---
+
+    // --- 8.4. ЛОГИКА СТРАНИЦЫ "О ЗАВОДЕ" (ОТЗЫВЫ, СЕРТИФИКАТЫ, FAQ) ---
     function initReviewsHeight() {
         document.querySelectorAll('.review-content-wrap').forEach(wrap => {
             if (wrap.offsetParent !== null) {
                 const btn = wrap.nextElementSibling;
                 if (btn && btn.classList.contains('js-toggle-text')) {
-                    if (wrap.scrollHeight <= 95) { wrap.classList.add('expanded'); btn.style.display = 'none'; } 
-                    else { btn.style.display = 'inline-block'; }
+                    if (wrap.scrollHeight <= 95) {
+                        wrap.classList.add('expanded');
+                        btn.style.display = 'none';
+                    } else {
+                        btn.style.display = 'inline-block';
+                    }
                 }
             }
         });
@@ -1206,10 +1358,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initReviewsHeight();
 
+    // Вешаем обработчик клика на весь документ
     document.addEventListener('click', function (e) {
         if (e.target.classList.contains('js-toggle-text')) {
-            const wrap = e.target.previousElementSibling;
-            wrap.classList.toggle('expanded');
+            const wrap = e.target.previousElementSibling; // Находим блок с текстом
+            wrap.classList.toggle('expanded'); // Разворачиваем/сворачиваем
             e.target.textContent = wrap.classList.contains('expanded') ? 'Скрыть' : 'Читать полностью';
         }
     });
@@ -1239,10 +1392,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (m) {
                 m.classList.add('active');
                 document.body.style.overflow = 'hidden';
+
                 const form = m.querySelector('form');
                 if (form) form.reset();
+
                 const star5 = m.querySelector('.star-rating input[value="5"]') || m.querySelector('.star-rating input');
-                if (star5) star5.checked = true;
+                if (star5) {
+                    star5.checked = true;
+                }
             }
         };
     });
@@ -1253,6 +1410,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (loadMoreBtn && certItems.length > LIMIT) {
         certItems.forEach((it, idx) => { if (idx >= LIMIT) it.style.display = 'none'; });
+
         loadMoreBtn.onclick = () => {
             const isHidden = Array.from(certItems).some((it, idx) => idx >= LIMIT && it.style.display === 'none');
             if (isHidden) {
@@ -1266,7 +1424,8 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    document.querySelectorAll('.faq-question').forEach(button => {
+    const faqQuestions = document.querySelectorAll('.faq-question');
+    faqQuestions.forEach(button => {
         button.addEventListener('click', () => {
             const item = button.closest('.faq-item');
             const answer = item.querySelector('.faq-answer');
@@ -1298,7 +1457,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const galleryContainer = document.getElementById('galleryContainer');
-        const loadMoreGalBtn = document.getElementById('loadMoreBtn');
+        const loadMoreGalBtn = document.getElementById('loadMoreBtn'); // переименовал константу локально, чтобы не конфликтовала с сертификатами
         const loadMoreContainer = document.getElementById('loadMoreContainer');
         const counterEl = document.getElementById('galleryCounter');
 
@@ -1308,7 +1467,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentFilter = 'all';
 
         window.updateCounter = function (total, visible) {
-            if (counterEl) counterEl.innerText = `Показано ${visible} из ${total} проектов`;
+            if (counterEl) {
+                counterEl.innerText = `Показано ${visible} из ${total} проектов`;
+            }
         };
 
         window.renderGallery = (filter = 'all', isLoadMore = false) => {
@@ -1336,8 +1497,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>`;
             });
 
-            if (isLoadMore) galleryContainer.insertAdjacentHTML('beforeend', html);
-            else galleryContainer.innerHTML = html;
+            if (isLoadMore) {
+                galleryContainer.insertAdjacentHTML('beforeend', html);
+            } else {
+                galleryContainer.innerHTML = html;
+            }
 
             itemsShown += itemsToRender.length;
 
@@ -1359,7 +1523,9 @@ document.addEventListener('DOMContentLoaded', () => {
         renderGallery();
 
         if (loadMoreGalBtn) {
-            loadMoreGalBtn.addEventListener('click', () => renderGallery(currentFilter, true));
+            loadMoreGalBtn.addEventListener('click', () => {
+                renderGallery(currentFilter, true);
+            });
         }
 
         document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
@@ -1399,11 +1565,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Умное скрытие фильтров при скролле ниже сетки фотографий
+        // НОВОЕ: Плавное скрытие фильтров при прокрутке ниже фотографий
         const filtersWrapper = document.querySelector('.sticky-filters-wrapper');
         if (filtersWrapper) {
             window.addEventListener('scroll', () => {
                 const rect = galleryContainer.getBoundingClientRect();
+                // Как только нижний край блока с фото поднимается к шапке, прячем меню
                 if (rect.bottom < 150) {
                     filtersWrapper.classList.add('is-hidden');
                 } else {
@@ -1411,10 +1578,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
-    }
-
+    } 
 
     // --- 8.6. СТРАНИЦА "НОВОСТИ" (ГЕНЕРАЦИЯ, ФИЛЬТРЫ И DEEP LINKS) ---
+
+    // 1. Умная сортировка: самые свежие новости сверху
     const sortedNewsData = [...newsData].sort((a, b) => {
         const [dayA, monthA, yearA] = a.date.split('.');
         const [dayB, monthB, yearB] = b.date.split('.');
@@ -1424,8 +1592,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderNews() {
         const gridPage = document.getElementById('newsGridPage');
         const gridHome = document.getElementById('newsGridHome');
+
         if (!gridPage && !gridHome) return;
 
+        // Добавляем data-id для прямых ссылок
         const buildCard = (item) => `
         <article class="news-card" data-cat="${item.category}" data-id="${item.id}">
             <div class="news-img-wrap" onclick="window.openCert(this)" style="cursor: zoom-in;">
@@ -1441,14 +1611,25 @@ document.addEventListener('DOMContentLoaded', () => {
         </article>
         `;
 
-        if (gridPage) gridPage.innerHTML = sortedNewsData.map(buildCard).join('');
-        if (gridHome) gridHome.innerHTML = sortedNewsData.slice(0, 3).map(buildCard).join('');
+        if (gridPage) {
+            gridPage.innerHTML = sortedNewsData.map(buildCard).join('');
+        }
+
+        if (gridHome) {
+            gridHome.innerHTML = sortedNewsData.slice(0, 3).map(buildCard).join('');
+        }
     }
 
-    renderNews();
-    if (typeof window.initScrollAnimations === 'function') window.initScrollAnimations();
+    renderNews(); // Запуск сборки карточек
+    if (typeof window.initScrollAnimations === 'function') {
+        window.initScrollAnimations();
+    }
 
+    /* ==========================================================================
+       2. ОТКРЫТИЕ НОВОСТЕЙ И КНОПКА "ПОДЕЛИТЬСЯ"
+       ========================================================================== */
     document.body.addEventListener('click', function (e) {
+        // Клик по кнопке "Читать далее"
         const btn = e.target.closest('.js-read-news');
         if (btn) {
             e.preventDefault();
@@ -1461,6 +1642,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('newsModalTitle').innerText = card.querySelector('.news-title').innerText;
                 document.getElementById('newsModalBody').innerHTML = card.querySelector('.hidden-full-text').innerHTML;
 
+                // Создаем кнопку "Поделиться" динамически, если ее еще нет
                 let shareBtn = document.getElementById('newsShareBtn');
                 if (!shareBtn) {
                     const modalBody = document.getElementById('newsModalBody');
@@ -1473,6 +1655,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     shareBtn = document.getElementById('newsShareBtn');
                 }
 
+                // Настраиваем ссылку и меняем URL в адресной строке
                 if (newsId && shareBtn) {
                     const shareUrl = window.location.origin + window.location.pathname + '?article=' + newsId;
                     shareBtn.dataset.link = shareUrl;
@@ -1484,6 +1667,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // Клик по новой кнопке "Поделиться новостью"
         const shareBtnClick = e.target.closest('#newsShareBtn');
         if (shareBtnClick) {
             e.preventDefault();
@@ -1495,6 +1679,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Очистка URL при закрытии модалок
     const originalClose = window.closeAllPopups;
     window.closeAllPopups = function () {
         if (originalClose) originalClose();
@@ -1503,6 +1688,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    /* ==========================================================================
+           3. ЧТЕНИЕ DEEP LINK ПРИ ЗАГРУЗКЕ СТРАНИЦЫ
+           ========================================================================== */
     const urlParamsNews = new URLSearchParams(window.location.search);
     const articleId = urlParamsNews.get('article');
     if (articleId) {
@@ -1511,11 +1699,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (card) {
                 const readBtn = card.querySelector('.js-read-news');
                 if (readBtn) readBtn.click();
-                document.title = card.querySelector('.news-title').innerText + ' | ПЛИТТЕКС';
+
+                // Динамическое СЕО: меняем заголовок вкладки браузера
+                const articleTitle = card.querySelector('.news-title').innerText;
+                document.title = articleTitle + ' | ПЛИТТЕКС';
             }
-        }, 300);
+        }, 300); // Небольшая задержка, чтобы карточки успели отрисоваться
     }
 
+    /* ==========================================================================
+       4. ЛОГИКА ФИЛЬТРОВ И АРХИВА НОВОСТЕЙ
+       ========================================================================== */
     const newsGrid = document.querySelector('.news-grid');
     if (newsGrid && !document.getElementById('catalog-root') && !document.getElementById('galleryContainer')) {
         const allNews = Array.from(document.querySelectorAll('.news-card'));
@@ -1536,7 +1730,9 @@ document.addEventListener('DOMContentLoaded', () => {
             btnContainer.appendChild(loadMoreBtn);
             newsGrid.parentNode.insertBefore(btnContainer, newsGrid.nextSibling);
 
-            allNews.forEach((card, index) => { if (index >= ITEMS_PER_PAGE) card.classList.add('hidden'); });
+            allNews.forEach((card, index) => {
+                if (index >= ITEMS_PER_PAGE) card.classList.add('hidden');
+            });
 
             loadMoreBtn.addEventListener('click', () => {
                 if (!isExpanded) {
@@ -1557,7 +1753,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                     loadMoreBtn.innerText = "Показать архив новостей";
                     isExpanded = false;
-                    const y = newsGrid.getBoundingClientRect().top + window.pageYOffset - 180;
+                    const offset = 180;
+                    const y = newsGrid.getBoundingClientRect().top + window.pageYOffset - offset;
                     window.scrollTo({ top: y, behavior: 'smooth' });
                 }
             });
@@ -1576,13 +1773,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (card.dataset.filter === activeFilter || card.dataset.cat === activeFilter) {
                             card.classList.remove('hidden');
                             card.classList.add('fade-in');
-                        } else { card.classList.add('hidden'); }
+                        } else {
+                            card.classList.add('hidden');
+                        }
                     });
                 } else {
                     if (btnContainer) btnContainer.style.display = 'block';
                     allNews.forEach((card, index) => {
-                        if (!isExpanded && index >= ITEMS_PER_PAGE) card.classList.add('hidden');
-                        else { card.classList.remove('hidden'); card.classList.add('fade-in'); }
+                        if (!isExpanded && index >= ITEMS_PER_PAGE) {
+                            card.classList.add('hidden');
+                        } else {
+                            card.classList.remove('hidden');
+                            card.classList.add('fade-in');
+                        }
                     });
                 }
             });
@@ -1590,13 +1793,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ==========================================================================
-      БЛОК 9: СИНХРОНИЗАЦИЯ КОРЗИНЫ МЕЖДУ ВКЛАДКАМИ
+      СИНХРОНИЗАЦИЯ КОРЗИНЫ МЕЖДУ ВКЛАДКАМИ (ИСПРАВЛЕНО)
       ========================================================================== */
     window.addEventListener('storage', (event) => {
+        // 1. Проверяем правильный ключ 'plittex_cart'
         if (event.key === 'plittex_cart' && event.newValue) {
             try {
+                // 2. Обновляем глобальную переменную cart
                 cart = JSON.parse(event.newValue);
-                if (typeof renderCart === 'function') renderCart();
+
+                // 3. Запускаем твою реальную функцию отрисовки
+                if (typeof renderCart === 'function') {
+                    renderCart();
+                }
+
                 console.log('Синхронизация корзины: данные обновлены из другой вкладки');
             } catch (e) {
                 console.error('Ошибка при синхронизации вкладок:', e);

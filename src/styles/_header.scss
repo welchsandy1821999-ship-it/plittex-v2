@@ -169,6 +169,17 @@
 }
 
 @media (max-width: 768px) {
+    /* --- НОВЫЙ КОД ДЛЯ ПОХУДЕНИЯ ШАПКИ --- */
+    .header__container {
+        flex-wrap: nowrap !important; /* Строго запрещаем перенос на 2 строки */
+        justify-content: space-between !important; /* Раскидываем логотип и меню по краям */
+    }
+
+    .header__contacts {
+        display: none !important; /* Полностью прячем телефон и кнопку из верхней полосы */
+    }
+    /* ------------------------------------- */
+
     .nav {
         display: none;
     }
