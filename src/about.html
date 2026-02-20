@@ -8,7 +8,7 @@
     <title>О заводе ПЛИТТЕКС | История и Производство</title>
     <meta name="description"
         content="Новокубанский завод Плиттекс. Производство тротуарной плитки с 2010 года. Немецкие технологии HESS, собственная лаборатория, гарантия качества и ГОСТ.">
-
+    <link rel="canonical" href="https://plittex.ru/about.html">
     <meta property="og:title" content="Новокубанский завод «Плиттекс»">
     <meta property="og:description"
         content="Лидер производства тротуарной плитки в ЮФО. Качество, проверенное временем.">
@@ -287,10 +287,15 @@
                     </div>
                     <form id="priceForm" class="form-white-box">
                         <h3 style="color:#333;">Записаться на визит</h3>
-                        <input type="text" name="antispam" class="u-hidden" tabindex="-1">
+
+                        <input type="text" name="antispam" class="u-hidden" tabindex="-1" autocomplete="off">
                         <input type="hidden" name="form_subject" value="Заявка на экскурсию (Страница О заводе)">
-                        <input type="text" name="name" placeholder="Ваше Имя" class="input-field" required>
-                        <input type="tel" name="phone" placeholder="Телефон" class="input-field" required>
+
+                        <input type="text" name="name" placeholder="Ваше Имя" class="input-field" required
+                            autocomplete="name">
+                        <input type="tel" name="phone" placeholder="Телефон" class="input-field" required
+                            autocomplete="tel">
+
                         <button type="submit" class="btn btn--primary full-width">ЗАБРОНИРОВАТЬ ВРЕМЯ</button>
                         <p class="policy-text">Нажимая кнопку, вы соглашаетесь с <a href="policy.html" target="_blank"
                                 style="text-decoration:underline;">политикой конфиденциальности</a>.</p>

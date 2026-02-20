@@ -9,7 +9,7 @@
     <title>Фото объектов и портфолио | ПЛИТТЕКС</title>
     <meta name="description"
         content="Примеры укладки тротуарной плитки Плиттекс. Фотографии благоустройства частных дворов и общественных парков ЮФО.">
-
+    <link rel="canonical" href="https://plittex.ru/objects.html">
     <meta property="og:title" content="Портфолио объектов ПЛИТТЕКС">
     <meta property="og:description" content="Более 2500 реализованных проектов. Посмотрите фото наших работ.">
     <meta property="og:type" content="website">
@@ -116,12 +116,16 @@
                     <div class="partners-form-card">
                         <h3>Вызвать замерщика</h3>
                         <p class="form-subtitle">Заполните форму, и мы свяжемся с вами в течение 15 минут</p>
-
                         <form id="consultForm">
-                            <input type="text" name="antispam" style="display:none !important;" tabindex="-1">
+                            <input type="text" name="antispam" style="display:none !important;" tabindex="-1"
+                                autocomplete="off">
                             <input type="hidden" name="form_subject" value="Вызов замерщика (Объекты)">
-                            <input type="text" name="name" placeholder="Ваше Имя" class="input-field" required>
-                            <input type="tel" name="phone" placeholder="Телефон" class="input-field" required>
+
+                            <input type="text" name="name" placeholder="Ваше Имя" class="input-field" required
+                                autocomplete="name">
+                            <input type="tel" name="phone" placeholder="Телефон" class="input-field" required
+                                autocomplete="tel">
+
                             <button type="submit" class="btn btn--primary full-width">Отправить заявку</button>
                             <p class="policy-small">
                                 Нажимая кнопку, вы соглашаетесь с <a href="policy.html" target="_blank">политикой

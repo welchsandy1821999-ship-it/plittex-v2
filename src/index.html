@@ -28,7 +28,6 @@
     <link rel="preload" href="./assets/fonts/Montserrat-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
 
     <link rel="preload" as="image" href="assets/img/hero-bg.jpg">
-
     <link rel="stylesheet" href="./styles/main.scss">
 
     <script src="https://unpkg.com/imask" defer></script>
@@ -407,10 +406,15 @@
                     </div>
                     <form id="consultationForm" class="form-white-box">
                         <h3 class="text-dark">Заказать расчет</h3>
-                        <input type="hidden" name="antispam" value="">
+
+                        <input type="text" name="antispam" class="u-hidden" tabindex="-1" autocomplete="off">
                         <input type="hidden" name="form_subject" value="Заявка на расчет сметы (Блок внизу)">
-                        <input type="text" name="name" placeholder="Ваше имя" class="input-field" required>
-                        <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" class="input-field" required>
+
+                        <input type="text" name="name" placeholder="Ваше имя" class="input-field" required
+                            autocomplete="name">
+                        <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" class="input-field" required
+                            autocomplete="tel">
+
                         <button type="submit" class="btn btn--primary full-width">ОТПРАВИТЬ ЗАЯВКУ</button>
                         <p class="policy-text">Нажимая кнопку, вы соглашаетесь с <a href="policy.html" target="_blank"
                                 style="text-decoration:underline;">политикой конфиденциальности</a>.</p>

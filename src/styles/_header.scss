@@ -10,14 +10,73 @@
     padding: 15px 0;
     transition: 0.4s;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
+    background: transparent;
+    /* По умолчанию прозрачный */
 
-.header--scrolled {
-    padding: 10px 0;
-    background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    border-bottom: none;
+    // Базовый цвет кнопки (белый для прозрачной шапки)
+    .mobile-menu-btn {
+        color: #fff;
+        background: none;
+        border: none;
+        font-size: 28px;
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
+
+    &--scrolled,
+    &--white {
+        background: #fff !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+        padding: 10px 0; // Чуть компактнее при скролле
+        border-bottom: 1px solid #ccc; // Добавляем легкую границу на белом
+
+        // 1. Ссылки главного меню
+        .nav__link {
+            color: #333 !important; // Принудительно темный на белом
+            text-shadow: none !important;
+
+            &:hover {
+                color: var(--primary-color) !important;
+            }
+        }
+
+        // 2. Надпись ЛИТТЕКС в логотипе (SVG text)
+        .logo-text {
+            fill: #32383E !important; // Темно-серый цвет из вашего брендбука
+        }
+        
+        // Дополнительно для значка логотипа
+        .logo-bg-p {
+            fill: var(--primary-color) !important;
+        }
+
+        // 3. Номер телефона
+        .phone {
+            color: #333 !important;
+            text-shadow: none !important;
+
+            &:hover {
+                color: var(--primary-color) !important;
+            }
+        }
+
+        // 4. Кнопка "Заказать звонок" (возвращаем ей синие границы)
+        .btn--outline {
+            color: var(--primary-color) !important;
+            border-color: var(--primary-color) !important;
+
+            &:hover {
+                background: var(--primary-color) !important;
+                color: #fff !important;
+            }
+        }
+
+        // 5. Иконка мобильного меню (бургер)
+        .mobile-menu-btn {
+            color: #333 !important;
+            text-shadow: none !important;
+        }
+    }
 }
 
 .header__container {
@@ -49,17 +108,20 @@
     transition: 0.3s;
 }
 
-/* Перекраска логотипа при белой шапке */
-.header--scrolled .logo-text {
+/* Перекраска логотипа при белой шапке (добавлена поддержка .header--white) */
+.header--scrolled .logo-text,
+.header--white .logo-text {
     fill: var(--dark-color) !important;
     font-weight: 900 !important;
 }
 
-.header--scrolled .logo-bg-p {
+.header--scrolled .logo-bg-p,
+.header--white .logo-bg-p {
     fill: var(--primary-color) !important;
 }
 
-.header--scrolled .letter-p {
+.header--scrolled .letter-p,
+.header--white .letter-p {
     fill: #fff !important;
 }
 
@@ -80,7 +142,9 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-.header--scrolled .nav__link {
+/* Расширяем для белой шапки */
+.header--scrolled .nav__link,
+.header--white .nav__link {
     color: var(--dark-color);
     text-shadow: none;
 }
@@ -119,17 +183,21 @@
     transition: 0.3s;
 }
 
-.header--scrolled .header__contacts .phone {
+/* Расширяем для белой шапки */
+.header--scrolled .header__contacts .phone,
+.header--white .header__contacts .phone {
     color: var(--dark-color);
     text-shadow: none;
 }
 
-.header--scrolled .btn--outline {
+.header--scrolled .btn--outline,
+.header--white .btn--outline {
     border-color: var(--primary-color);
     color: var(--primary-color);
 }
 
-.header--scrolled .btn--outline:hover {
+.header--scrolled .btn--outline:hover,
+.header--white .btn--outline:hover {
     background: var(--primary-color);
     color: #fff;
 }
@@ -169,15 +237,20 @@
 }
 
 @media (max-width: 768px) {
+
     /* --- НОВЫЙ КОД ДЛЯ ПОХУДЕНИЯ ШАПКИ --- */
     .header__container {
-        flex-wrap: nowrap !important; /* Строго запрещаем перенос на 2 строки */
-        justify-content: space-between !important; /* Раскидываем логотип и меню по краям */
+        flex-wrap: nowrap !important;
+        /* Строго запрещаем перенос на 2 строки */
+        justify-content: space-between !important;
+        /* Раскидываем логотип и меню по краям */
     }
 
     .header__contacts {
-        display: none !important; /* Полностью прячем телефон и кнопку из верхней полосы */
+        display: none !important;
+        /* Полностью прячем телефон и кнопку из верхней полосы */
     }
+
     /* ------------------------------------- */
 
     .nav {
@@ -201,7 +274,9 @@
         z-index: 1001;
     }
 
-    .header--scrolled .mobile-menu-btn {
+    /* Расширяем для белой шапки */
+    .header--scrolled .mobile-menu-btn,
+    .header--white .mobile-menu-btn {
         color: var(--dark-color) !important;
         text-shadow: none;
     }
@@ -213,7 +288,7 @@
         right: -300px;
         width: 280px;
         height: 100vh;
-        background: #ffffff;
+        background: #ffffff; // Фон мобильного меню всегда белый
         flex-direction: column;
         padding: 80px 25px 40px;
         box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);

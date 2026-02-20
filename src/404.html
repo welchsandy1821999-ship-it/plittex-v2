@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Страница не найдена (404) | ПЛИТТЕКС</title>
-    <meta name="description"
-        content="Запрашиваемая страница не существует. Возможно, вы ошиблись в адресе или страница была удалена.">
+    <meta name="description" content="Запрашиваемая страница не существует. Возможно, вы ошиблись в адресе или страница была удалена.">
+    <meta name="robots" content="noindex, follow">
 
     <meta property="og:title" content="Страница не найдена | ПЛИТТЕКС">
     <meta property="og:description" content="Запрашиваемая страница не существует.">
@@ -54,19 +54,16 @@
     {{> header }}
 
     <main>
-        <section class="page-header" style="height: 100vh; min-height: 600px; display: flex; align-items: center;">
+        <section class="page-header page-header--404">
             <div class="page-header-bg"></div>
-            <div class="hero__overlay" style="background: rgba(0,0,0,0.7);"></div>
-            <div class="container" style="position:relative; z-index:2; text-align: center;">
-                <h1
-                    style="font-size: clamp(80px, 15vw, 150px); margin: 0; line-height: 1; color: var(--primary-color);">
-                    404</h1>
-                <h2 style="font-size: 32px; margin-bottom: 20px; color: #fff;">Упс! Кажется, плитка выложена не здесь
-                </h2>
-                <p class="hero__subtitle" style="max-width: 600px; margin: 0 auto 40px; color: #ccc;">
+            <div class="hero__overlay"></div>
+            <div class="container content-404">
+                <h1>404</h1>
+                <h2>Упс! Кажется, плитка выложена не здесь</h2>
+                <p class="hero__subtitle">
                     Страница не существует. Вернитесь в каталог, чтобы найти нужную коллекцию.
                 </p>
-                <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <div class="buttons-404">
                     <a href="catalog.html" class="btn btn--primary">В каталог</a>
                     <a href="index.html" class="btn btn--outline">На главную</a>
                 </div>

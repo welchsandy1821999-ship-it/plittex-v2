@@ -103,7 +103,7 @@
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                 </svg>
                                 <input type="text" id="searchInput" class="search-input"
-                                    placeholder="Поиск (Например: Квадрат, Бордюр...)">
+                                    placeholder="Поиск (Например: Квадрат, Бордюр...)" autocomplete="off">
                                 <div id="searchDropdown" class="search-dropdown"></div>
                             </div>
 
@@ -170,11 +170,14 @@
                         <h3>Заказать консультацию</h3>
                         <p class="form-subtitle">Оставьте номер, мы перезвоним</p>
                         <form id="consultForm">
-                            <input type="text" name="antispam" style="display:none !important;" tabindex="-1">
+                            <input type="text" name="antispam" style="display:none !important;" tabindex="-1"
+                                autocomplete="off">
                             <input type="hidden" name="form_subject" value="Консультация из каталога">
 
-                            <input type="text" name="name" placeholder="Ваше Имя" class="input-field" required>
-                            <input type="tel" name="phone" placeholder="Телефон" class="input-field" required>
+                            <input type="text" name="name" placeholder="Ваше Имя" class="input-field" required
+                                autocomplete="name">
+                            <input type="tel" name="phone" placeholder="Телефон" class="input-field" required
+                                autocomplete="tel">
 
                             <button type="submit" class="btn btn--primary full-width">Отправить заявку</button>
                             <p class="policy-small">Нажимая кнопку, вы соглашаетесь с <a href="policy.html"
