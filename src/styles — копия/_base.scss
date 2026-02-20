@@ -2,20 +2,20 @@
    БАЗОВЫЕ НАСТРОЙКИ И СБРОС СТИЛЕЙ (RESET)
    ========================================================================== */
 * {
-    box-sizing: border-box; /* Комментарий: Размеры элементов включают padding и border */
+    box-sizing: border-box;
 }
 
 body {
     margin: 0;
-    font-family: 'Montserrat', sans-serif; /* Комментарий: Фирменный шрифт сайта */
+    font-family: 'Montserrat', sans-serif;
     color: var(--text-color);
     line-height: 1.6;
     background: var(--white);
-    overflow-x: hidden; /* Комментарий: Защита от горизонтального скролла */
+    overflow-x: hidden;
     font-weight: 400;
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Комментарий: Прижимаем футер к низу экрана */
+    min-height: 100vh;
 }
 
 a {
@@ -27,7 +27,7 @@ a {
 img,
 video {
     max-width: 100%;
-    display: block; /* Комментарий: Убираем пустые отступы под картинками */
+    display: block;
 }
 
 ul,
@@ -56,29 +56,49 @@ button {
 }
 
 .section-padding {
-    padding: 80px 0; /* Комментарий: Стандартный отступ между крупными блоками */
+    padding: 80px 0;
 }
 
 @media (max-width: 768px) {
     .section-padding {
-        padding: 50px 0; /* Комментарий: На мобильных экранах блоки стоят плотнее */
+        padding: 50px 0;
     }
 }
 
 /* ==========================================================================
    ГЛОБАЛЬНЫЕ ВСПОМОГАТЕЛЬНЫЕ КЛАССЫ (UTILITIES)
    ========================================================================== */
-.bg-light { background: var(--light-bg); }
-.bg-dark { background: var(--dark-color); color: #fff; }
-.text-center { text-align: center; }
-.mb-20 { margin-bottom: 20px; }
-.full-width { width: 100% !important; display: flex; justify-content: center; min-width: 100% !important; }
-.u-hidden { display: none !important; }
+.bg-light {
+    background: var(--light-bg);
+}
+
+.bg-dark {
+    background: var(--dark-color);
+    color: #fff;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.full-width {
+    width: 100% !important;
+    display: flex;
+    justify-content: center;
+    min-width: 100% !important;
+}
+
+.u-hidden {
+    display: none !important;
+}
 
 /* ==========================================================================
    ОБЩИЙ СТИЛЬ КАРТОЧЕК (ЕДИНЫЙ КАРКАС)
    ========================================================================== */
-/* Комментарий: Все карточки на сайте имеют одинаковую тень, скругления и реакцию на наведение */
 .prod-card,
 .stat-item,
 .feature-card,
@@ -87,7 +107,7 @@ button {
 .b-card {
     background: #fff;
     border-radius: 12px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-color, #dddddd);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.20);
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -100,65 +120,80 @@ button {
 .b-card:hover {
     transform: translateY(-10px);
     border-color: var(--primary-color);
-    box-shadow: 0 20px 40px rgba(0, 107, 179, 0.20); /* Синее свечение */
+    box-shadow: 0 20px 40px rgba(0, 107, 179, 0.20);
 }
 
 /* ==========================================================================
    КАСТОМНЫЙ СКРОЛЛБАР
    ========================================================================== */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--light-bg); }
-::-webkit-scrollbar-thumb { background: var(--primary-color); border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--light-bg, #f8f9fa);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color, #006BB3);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark, #004e82);
+}
 
 /* ==========================================================================
-   ГЛОБАЛЬНЫЕ АНИМАЦИИ (JS INTERSECTION OBSERVER)
+   КЛАССЫ ДЛЯ АНИМАЦИИ ПРИ СКРОЛЛЕ (JS)
    ========================================================================== */
-/* Комментарий: Убрали дубликаты. Это финальная плавная анимация всплытия блоков */
 .animate-on-scroll {
     opacity: 0;
-    transform: translateY(70px);
-    will-change: transform, opacity;
+    transform: translateY(40px);
+    transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+        transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .animate-on-scroll.is-visible {
-    animation: fadeUpPronounced 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-@keyframes fadeUpPronounced {
-    0% { opacity: 0; transform: translateY(70px); }
-    100% { opacity: 1; transform: translateY(0); }
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* ==========================================================================
    СЕТКА ПРОЦЕССА ПРОИЗВОДСТВА И КОМАНДЫ (О ЗАВОДЕ)
    ========================================================================== */
 .process-grid {
+    /* Комментарий: Используем Grid для построения гибкой сетки карточек */
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
 }
 
 .process-step {
+    /* Комментарий: Твои правки — делаем карточку более контрастной и выразительной */
     background: #fff;
     padding: 40px 30px;
     border-radius: 16px;
     position: relative;
+
+    /* Комментарий: Мягкая тень для эффекта "карточки" по твоим параметрам */
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.20);
     transition: all 0.3s ease;
     border: 1px solid #ccc;
+
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
+/* Комментарий: Эффект "всплытия" при наведении с акцентной синей тенью по твоим параметрам */
 .process-step:hover {
     transform: translateY(-10px);
     box-shadow: 0 20px 40px rgba(0, 107, 179, 0.20);
-    border-color: var(--primary-color);
+    border-color: var(--primary-color, #006BB3);
 }
 
 .process-number {
+    /* Комментарий: Декоративный номер этапа на заднем плане */
     font-size: 60px;
     font-weight: 900;
     color: rgba(0, 107, 179, 0.07);
@@ -171,8 +206,9 @@ button {
 }
 
 .process-step h4 {
+    /* Комментарий: Заголовки карточек — жирный шрифт и верхний регистр */
     font-size: 18px;
-    color: var(--dark-color);
+    color: var(--dark-color, #333);
     margin-bottom: 15px;
     font-weight: 800;
     text-transform: uppercase;
@@ -181,6 +217,7 @@ button {
 }
 
 .process-step p {
+    /* Комментарий: Описание этапа или должности сотрудника */
     font-size: 15px;
     color: #666;
     line-height: 1.6;
@@ -189,19 +226,50 @@ button {
     z-index: 2;
 }
 
+/* Комментарий: Стили для фотографий команды внутри тех же карточек */
 .team-photo-wrap {
     width: 120px;
     height: 120px;
     margin: 0 auto 20px;
     border-radius: 50%;
     overflow: hidden;
-    border: 3px solid var(--primary-color);
+    border: 3px solid var(--primary-color, #006BB3);
     position: relative;
     z-index: 2;
 }
 
-.team-photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
+.team-photo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
 @media (max-width: 480px) {
-    .process-step { padding: 30px 20px; }
+    .process-step {
+        padding: 30px 20px;
+    }
+}
+
+/* Обновленная, более заметная анимация всплытия */
+.animate-on-scroll {
+    opacity: 0;
+    /* Увеличили начальный сдвиг вниз до 70px */
+    transform: translateY(70px); 
+    will-change: transform, opacity;
+}
+
+.animate-on-scroll.is-visible {
+    /* Длительность 1 секунда для плавности и улучшенная кривая затухания */
+    animation: fadeUpPronounced 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeUpPronounced {
+    0% {
+        opacity: 0;
+        transform: translateY(70px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

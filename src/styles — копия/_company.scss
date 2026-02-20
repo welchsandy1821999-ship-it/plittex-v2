@@ -63,7 +63,7 @@
     background: #fff;
     position: relative;
     border-radius: 15px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-color, #eee);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     transition: 0.3s;
 }
@@ -86,12 +86,17 @@
 
 @media (max-width: 768px) {
     .timeline::after { left: 31px; }
-    .timeline-item { width: 100%; padding-left: 70px; padding-right: 20px; text-align: left !important; }
+    .timeline-item {
+        width: 100%;
+        padding-left: 70px;
+        padding-right: 20px;
+        text-align: left !important;
+    }
     .timeline-item::after { left: 21px; top: 40px; }
     .timeline-item.right { left: 0; }
 }
 
-/* --- ЦИФРЫ И СТАТИСТИКА (ДЛЯ СТРАНИЦЫ "О ЗАВОДЕ") --- */
+/* --- ЦИФРЫ И СТАТИСТИКА --- */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -103,7 +108,7 @@
 .stat-card {
     padding: 30px;
     border-radius: 12px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-color, #ccc);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.20);
     transition: 0.3s ease;
     display: flex;
@@ -140,7 +145,7 @@
 
 .cert-item {
     cursor: zoom-in;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-color, #ccc);
     border-radius: 8px;
     overflow: hidden;
     transition: 0.3s;
@@ -161,10 +166,10 @@
 }
 
 /* ==========================================================================
-   ПАРТНЕРЫ И ПРЕИМУЩЕСТВА (ЕДИНЫЙ БЛОК)
+   ПАРТНЕРЫ И ПРЕИМУЩЕСТВА
    ========================================================================== */
 
-/* --- ВИДЫ ПАРТНЕРОВ (КАРТОЧКИ С ИКОНКАМИ) --- */
+/* --- ВИДЫ ПАРТНЕРОВ --- */
 .partner-types {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -176,7 +181,7 @@
     background: #fff;
     padding: 40px 30px;
     text-align: left;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-color, #ddd);
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.20);
     transition: 0.3s ease;
@@ -191,7 +196,12 @@
     border-color: var(--primary-color);
 }
 
-.p-icon { font-size: 54px; margin-bottom: 25px; line-height: 1; text-align: center; }
+.p-icon {
+    font-size: 54px;
+    margin-bottom: 25px;
+    line-height: 1;
+    text-align: center;
+}
 
 .p-card h3 {
     text-align: center;
@@ -202,11 +212,32 @@
     text-transform: uppercase;
 }
 
-.p-list { border-top: 1px solid #eee; padding-top: 20px; margin-top: auto; }
-.p-list li { position: relative; padding-left: 24px; margin-bottom: 12px; font-size: 14px; color: #555; line-height: 1.5; }
-.p-list li::before { content: '•'; color: var(--primary-color); font-weight: bold; font-size: 24px; position: absolute; left: 0; top: -5px; }
+.p-list {
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+    margin-top: auto;
+}
 
-/* --- ПРЕИМУЩЕСТВА РАБОТЫ (КРУПНЫЕ ЦИФРЫ НА ФОНЕ) --- */
+.p-list li {
+    position: relative;
+    padding-left: 24px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+}
+
+.p-list li::before {
+    content: '•';
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 24px;
+    position: absolute;
+    left: 0;
+    top: -5px;
+}
+
+/* --- ПРЕИМУЩЕСТВА РАБОТЫ (ЦИФРЫ И ФАКТЫ) --- */
 .benefits-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -221,7 +252,7 @@
     display: flex;
     flex-direction: column;
     background: #fff;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--border-color, #ddd);
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.20);
     height: 100%;
@@ -236,31 +267,69 @@
 }
 
 .b-card::after {
-    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
-    background: var(--primary-color); transform: scaleX(0); transition: transform 0.4s ease; transform-origin: left;
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--primary-color);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+    transform-origin: left;
 }
 
 .b-card:hover::after { transform: scaleX(1); }
-.b-icon-wrap { font-size: 54px; margin-bottom: 25px; line-height: 1; z-index: 2; }
+
+.b-icon-wrap {
+    font-size: 54px;
+    margin-bottom: 25px;
+    line-height: 1;
+    z-index: 2;
+}
 
 .b-card h3 {
-    font-size: 18px; font-weight: 800; margin-bottom: 15px; color: var(--dark-color);
-    text-transform: uppercase; min-height: 50px; display: flex; align-items: center; z-index: 2;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 15px;
+    color: var(--dark-color);
+    text-transform: uppercase;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    z-index: 2;
 }
 
-.b-card p { font-size: 14px; color: #666; line-height: 1.7; margin: 0; z-index: 2; }
+.b-card p {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.7;
+    margin: 0;
+    z-index: 2;
+}
 
 .b-num {
-    position: absolute; top: -10px; right: -10px; font-size: 120px; font-weight: 900;
-    color: var(--light-bg); line-height: 1; z-index: 0; pointer-events: none; transition: 0.3s;
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 120px;
+    font-weight: 900;
+    color: var(--light-bg);
+    line-height: 1;
+    z-index: 0;
+    pointer-events: none;
+    transition: 0.3s;
 }
 
-.b-card:hover .b-num { color: rgba(0, 107, 179, 0.05); transform: scale(1.1) rotate(-5deg); }
+.b-card:hover .b-num {
+    color: rgba(0, 107, 179, 0.05);
+    transform: scale(1.1) rotate(-5deg);
+}
 
-/* --- БЛОК CTA ДЛЯ ПАРТНЕРОВ (ТЕМНЫЙ ФОН) --- */
+/* --- БЛОК CTA ДЛЯ ПАРТНЕРОВ --- */
 .partners-cta-section {
     padding: 80px 0;
-    background-color: var(--dark-color);
+    background-color: var(--text-color, #333);
     color: #fff;
 }
 
@@ -271,11 +340,26 @@
     align-items: center;
 }
 
-.partners-list li { display: flex; align-items: center; margin-bottom: 15px; font-size: 17px; color: #fff; }
+.partners-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 17px;
+    color: #fff;
+}
 
 .check-icon {
-    display: flex; align-items: center; justify-content: center; width: 24px; height: 24px;
-    background: var(--primary-color); color: #fff; border-radius: 50%; font-size: 14px; font-weight: bold; margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--primary-color);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 15px;
 }
 
 .partners-form-card {
@@ -283,6 +367,6 @@
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-    color: var(--text-color);
+    color: var(--text-color, #333);
     text-align: center;
 }

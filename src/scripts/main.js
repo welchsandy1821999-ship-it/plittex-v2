@@ -1544,7 +1544,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const pageHeader = document.querySelector('.page-header');
                 if (pageHeader) {
-                    const scrollTarget = pageHeader.offsetTop + pageHeader.offsetHeight - 68;
+                    const scrollTarget = pageHeader.offsetTop + pageHeader.offsetHeight - 67;
                     if (window.scrollY > scrollTarget) window.scrollTo({ top: scrollTarget, behavior: "smooth" });
                 }
             });
@@ -1564,8 +1564,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.openLightbox(src, title + ' — ' + desc);
             }
         }
-    }
 
+        // НОВОЕ: Плавное скрытие фильтров при прокрутке ниже фотографий
+        const filtersWrapper = document.querySelector('.sticky-filters-wrapper');
+        if (filtersWrapper) {
+            window.addEventListener('scroll', () => {
+                const rect = galleryContainer.getBoundingClientRect();
+                // Как только нижний край блока с фото поднимается к шапке, прячем меню
+                if (rect.bottom < 150) {
+                    filtersWrapper.classList.add('is-hidden');
+                } else {
+                    filtersWrapper.classList.remove('is-hidden');
+                }
+            });
+        }
+    } 
 
     // --- 8.6. СТРАНИЦА "НОВОСТИ" (ГЕНЕРАЦИЯ, ФИЛЬТРЫ И DEEP LINKS) ---
 

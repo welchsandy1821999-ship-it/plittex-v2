@@ -1,10 +1,212 @@
 /* ==========================================================================
-   СЛУЖЕБНЫЕ СТРАНИЦЫ (УСПЕХ ОТПРАВКИ, 404 ОШИБКА)
+   8. ПАРТНЕРЫ
+   ========================================================================== */
+.partner-types {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.p-card {
+    background: #fff;
+    padding: 40px 30px;
+    text-align: left;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.20);
+    transition: 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.p-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 107, 179, 0.20);
+    border-color: var(--primary-color);
+}
+
+.p-icon {
+    font-size: 54px;
+    margin-bottom: 25px;
+    line-height: 1;
+    text-align: center;
+}
+
+.p-card h3 {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: #333;
+    text-transform: uppercase;
+}
+
+.p-list {
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+    margin-top: auto;
+}
+
+.p-list li {
+    position: relative;
+    padding-left: 24px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+}
+
+.p-list li::before {
+    content: '•';
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 24px;
+    position: absolute;
+    left: 0;
+    top: -5px;
+}
+
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+    align-items: stretch;
+}
+
+.b-card {
+    position: relative;
+    overflow: hidden;
+    padding: 50px 35px;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.20);
+    height: 100%;
+    z-index: 1;
+    transition: 0.3s ease;
+}
+
+.b-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 107, 179, 0.20);
+    border-color: var(--primary-color);
+}
+
+.b-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--primary-color);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+    transform-origin: left;
+}
+
+.b-card:hover::after { transform: scaleX(1); }
+
+.b-icon-wrap {
+    font-size: 54px;
+    margin-bottom: 25px;
+    line-height: 1;
+    z-index: 2;
+}
+
+.b-card h3 {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 15px;
+    color: var(--dark-color);
+    text-transform: uppercase;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    z-index: 2;
+}
+
+.b-card p {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.7;
+    margin: 0;
+    z-index: 2;
+}
+
+.b-num {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 120px;
+    font-weight: 900;
+    color: #f8f9fa;
+    line-height: 1;
+    z-index: 0;
+    pointer-events: none;
+    transition: 0.3s;
+}
+
+.b-card:hover .b-num {
+    color: rgba(0, 107, 179, 0.05);
+    transform: scale(1.1) rotate(-5deg);
+}
+
+.partners-cta-section {
+    padding: 80px 0;
+    background-color: #333;
+    color: #fff;
+}
+
+.partners-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.partners-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 17px;
+    color: #fff;
+}
+
+.check-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--primary-color);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.partners-form-card {
+    background: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    color: #333;
+    text-align: center;
+}
+
+/* ==========================================================================
+   12. СЛУЖЕБНЫЕ СТРАНИЦЫ
    ========================================================================== */
 .status-page {
     min-height: 60vh; display: flex; flex-direction: column;
     justify-content: center; align-items: center; text-align: center;
-    padding: 120px 20px 60px; background: var(--light-bg);
+    padding: 120px 20px 60px; background: #f8f9fa;
 }
 
 .status-content {
@@ -28,24 +230,10 @@
 @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
 
 /* ==========================================================================
-   ГАЛЕРЕЯ ПРОЕКТОВ И ФИЛЬТРЫ (OBJECTS.HTML)
+   13. ГАЛЕРЕЯ И ФИЛЬТРЫ (OBJECTS.HTML)
    ========================================================================== */
 .sticky-filters-wrapper {
-    position: sticky; 
-    top: 53px; /* Твои идеальные 67px */
-    z-index: 90; 
-    margin: 0 15px 15px; 
-    padding-top: 15px; 
-    padding-bottom: 10px; 
-    display: flex; 
-    justify-content: center; 
-    pointer-events: none;
-    transition: opacity 0.3s ease; /* Добавили плавность */
-}
-
-/* НОВЫЙ КЛАСС: Скрывает фильтры, когда они не нужны */
-.sticky-filters-wrapper.is-hidden {
-    opacity: 0 !important;
+    position: sticky; top: 65px; z-index: 90; margin: 15px; padding-bottom: 10px; display: flex; justify-content: center; pointer-events: none;
 }
 
 .filter-container {
