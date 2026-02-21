@@ -35,7 +35,7 @@ const CATS_CONFIG = [
    БЛОК 2: ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И УТИЛИТЫ
    ========================================================================== */
 let cart = []; // Глобальный массив корзины
-const NO_PHOTO_SRC = 'assets/img/no-photo.jpg';
+const NO_PHOTO_SRC = 'assets/img/no-photo.webp';
 
 /**
  * Глобальная функция обработки ошибок картинок (подставляет заглушку)
@@ -100,14 +100,14 @@ window.toggleMobileMenu = function () {
     const nav = document.getElementById('mainNav');
     const btn = document.querySelector('.mobile-menu-btn');
     let overlay = document.querySelector('.mobile-menu-overlay');
-    
+
     if (!overlay) {
         overlay = document.createElement('div');
         overlay.className = 'mobile-menu-overlay';
         document.body.appendChild(overlay);
         overlay.addEventListener('click', toggleMobileMenu);
     }
-    
+
     if (!nav || !btn) return;
     const isActive = nav.classList.toggle('active');
     overlay.classList.toggle('active');
@@ -130,17 +130,21 @@ function closeMobileMenu() {
 
 /** Глобальная функция: Закрывает ВСЕ всплывающие окна, корзину и меню */
 function closeAllPopups() {
+    // 1. Закрываем все модальные окна
     document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
 
+    // 2. Удаляем окно быстрого заказа
     const qoModal = document.getElementById('quickOrderModal');
     if (qoModal) qoModal.remove();
 
+    // 3. Прячем лайтбокс
     const lb = document.getElementById('lightbox-overlay') || document.getElementById('lightbox');
     if (lb && lb.classList.contains('active')) {
         lb.classList.remove('active');
         setTimeout(() => { lb.style.display = 'none'; }, 300);
     }
 
+    // 4. Закрываем корзину
     const d = document.getElementById('cartDrawer');
     const o = document.getElementById('cartOverlay');
     if (o) o.classList.remove('active');
@@ -149,11 +153,31 @@ function closeAllPopups() {
     const s = document.getElementById('stickyCart');
     if (s) s.classList.remove('hidden-by-drawer');
 
+    // 5. Скрываем мобильное меню
     closeMobileMenu();
 
+    // --- НАЧАЛО: ВЫКЛЮЧАЕМ ПЛЕЕР ПРИ ЗАКРЫТИИ ОКНА ---
+    const modalMedia = document.getElementById('newsModalImg');
+    if (modalMedia) {
+        if (modalMedia.tagName.toLowerCase() === 'iframe') {
+            // "Перезаряжаем" YouTube iframe, чтобы сбросить видео
+            modalMedia.src = modalMedia.src;
+        } else if (modalMedia.tagName.toLowerCase() === 'video') {
+            // Ставим на паузу обычное локальное видео
+            modalMedia.pause();
+        }
+    }
+    // --- КОНЕЦ: ВЫКЛЮЧАЕМ ПЛЕЕР ---
+
+    // 6. Разблокируем скролл, если больше нет открытых окон
     const anyActive = document.querySelector('.modal.active, .cart-drawer.active');
     if (!anyActive) document.body.style.overflow = '';
 }
+
+// Привязываем функцию к объекту window
+window.closeAllPopups = closeAllPopups;
+window.closeLightbox = closeAllPopups;
+window.closeNewsModal = closeAllPopups;
 window.closeAllPopups = closeAllPopups;
 window.closeLightbox = closeAllPopups;
 window.closeNewsModal = closeAllPopups;
@@ -282,7 +306,7 @@ function renderFeaturedProducts() {
         const colorsList = item.prices['mix'] ? ['onyx', 'autumn', 'ruby', 'jasper', 'amber'] : Object.keys(item.prices);
 
         colorsList.forEach(c => {
-            dots += `<div class="color-dot" style="background:${COLOR_MAP[c]}" data-title="${COLOR_NAMES[c]}" onmouseover="setImg('${item.id}', '${basePath}${c}.png')"></div>`;
+            dots += `<div class="color-dot" style="background:${COLOR_MAP[c]}" data-title="${COLOR_NAMES[c]}" onmouseover="setImg('${item.id}', '${basePath}${c}.webp')"></div>`;
         });
         dots += '</div>';
 
@@ -297,7 +321,7 @@ function renderFeaturedProducts() {
         card.innerHTML = `
             ${badgeHtml}
             <div class="pc-head" onclick="openCert(this)" style="cursor:zoom-in;">
-                <img src="${basePath}${defImg}.png" id="img-${item.id}" class="pc-img" onerror="window.handleImgError(this)" alt="${item.n}">
+                <img src="${basePath}${defImg}.webp" id="img-${item.id}" class="pc-img" onerror="window.handleImgError(this)" alt="${item.n}">
             </div>
             <div class="pc-body">
                 <div class="pc-title" onclick="window.location.href='${link}'" style="cursor:pointer;">${item.n}</div>
@@ -326,9 +350,9 @@ async function loadReviews() {
         const response = await fetch('./data/reviews.json');
         const reviews = await response.json();
         const colorSchemes = [
-            { bg: '#f0f7fc', color: 'var(--primary-color)' }, 
-            { bg: '#fcf0fc', color: '#9b59b6' },             
-            { bg: '#fdf2f2', color: '#e74c3c' }              
+            { bg: '#f0f7fc', color: 'var(--primary-color)' },
+            { bg: '#fcf0fc', color: '#9b59b6' },
+            { bg: '#fdf2f2', color: '#e74c3c' }
         ];
 
         let visibleHtml = '';
@@ -378,7 +402,7 @@ window.renderCatalog = function () {
     const sortSelect = document.getElementById('sortSelect');
     const sortMode = sortSelect ? sortSelect.value : 'default';
 
-    let totalItemsFound = 0; 
+    let totalItemsFound = 0;
 
     CATS_CONFIG.forEach(c => {
         const wrapper = document.createElement('div');
@@ -448,7 +472,7 @@ window.renderCatalog = function () {
 
                 displayColors.forEach(clr => {
                     if (COLOR_MAP[clr]) {
-                        dotsHtml += `<div class="color-dot" style="background:${COLOR_MAP[clr]}" data-title="${COLOR_NAMES[clr]}" onmouseover="window.setImg('${item.id}', '${basePath}${clr}.png')"></div>`;
+                        dotsHtml += `<div class="color-dot" style="background:${COLOR_MAP[clr]}" data-title="${COLOR_NAMES[clr]}" onmouseover="window.setImg('${item.id}', '${basePath}${clr}.webp')"></div>`;
                     }
                 });
                 dotsHtml += '</div>';
@@ -460,7 +484,7 @@ window.renderCatalog = function () {
                 card.innerHTML = `
                      ${badgeHtml}
                      <div class="pc-head" onclick="window.openLightbox(this.querySelector('img').src, '${safeName}')" style="cursor:zoom-in;">
-                        <img src="${basePath}${defaultImg}.png" loading="lazy" decoding="async" id="img-${item.id}" class="pc-img" alt="${item.n}" onerror="window.handleImgError(this)">                    
+                        <img src="${basePath}${defaultImg}.webp" loading="lazy" decoding="async" id="img-${item.id}" class="pc-img" alt="${item.n}" onerror="window.handleImgError(this)">                    
                      </div>
                      <div class="pc-body">
                         <div class="pc-title">${item.n}</div>
@@ -534,7 +558,7 @@ window.handleSearch = function (val) {
         let html = '';
         matches.slice(0, 5).forEach(item => {
             const defaultImg = item.cat.includes('melange') ? 'onyx' : 'gray';
-            const thumbPath = `assets/img/catalog/${item.col}/${item.form}/${defaultImg}.png`;
+            const thumbPath = `assets/img/catalog/${item.col}/${item.form}/${defaultImg}.webp`;
             html += `<div class="search-item" onclick="window.goToProduct('${item.id}', '${item.cat}')">
                 <div class="search-item-name">${item.n}</div>
                 <img src="${thumbPath}" style="width:30px; height:30px; border-radius:4px; object-fit:cover;" onerror="window.handleImgError(this)">
@@ -551,8 +575,8 @@ window.handleSearch = function (val) {
 /** Сброс поиска по кнопке в заглушке */
 window.resetSearch = function () {
     const searchInput = document.getElementById('searchInput');
-    if (searchInput) searchInput.value = ''; 
-    window.handleSearch(''); 
+    if (searchInput) searchInput.value = '';
+    window.handleSearch('');
 };
 
 /** Переход к конкретному товару из выпадающего списка поиска */
@@ -614,7 +638,7 @@ window.addToCart = function (productId, colorId = 'gray', quantity = 1) {
 
     const colorName = COLOR_NAMES[colorId] || 'Не указан';
     const price = product.prices[colorId] || product.prices['mix'] || 0;
-    const thumb = `assets/img/catalog/${product.col}/${product.form}/${colorId}.png`;
+    const thumb = `assets/img/catalog/${product.col}/${product.form}/${colorId}.webp`;
     const unitWeight = (parseFloat(product.w) || 0) / (parseFloat(product.q) || 1);
 
     const existingItem = cart.find(item => item.id === productId && item.color === colorName);
@@ -822,7 +846,7 @@ window.openQuickOrder = function (productId) {
     <div class="modal-container" style="max-width: 480px; padding: 0; border-radius: 16px; overflow: hidden;">
         <button class="modal-close" onclick="closeAllPopups()" style="top: 15px; right: 15px; background: #fff; border-radius: 50%; width: 32px; height: 32px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">✕</button>
         <div style="background: #f8f9fa; padding: 25px 30px; border-bottom: 1px solid #eee; display: flex; gap: 20px; align-items: center;">
-            <img id="qo-img" src="${basePath}${defColor}.png" onerror="window.handleImgError(this)" style="width: 110px; height: 110px; object-fit: contain; border-radius: 12px; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); padding: 5px;">
+            <img id="qo-img" src="${basePath}${defColor}.webp" onerror="window.handleImgError(this)" style="width: 110px; height: 110px; object-fit: contain; border-radius: 12px; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); padding: 5px;">
             <div>
                 <h4 style="margin: 0 0 5px; font-size: 18px; font-weight: 800; line-height: 1.2;">${product.n}</h4>
                 <div style="font-size: 13px; color: #777; margin-bottom: 8px;">Размер: ${product.s}</div>
@@ -838,7 +862,7 @@ window.openQuickOrder = function (productId) {
                     ${colorsList.map(c => `
                         <div class="color-dot ${c === defColor ? 'active' : ''}" 
                              style="background:${COLOR_MAP[c]}; width: 38px; height: 38px; ${c === defColor ? 'box-shadow: 0 0 0 2px #333;' : ''}" 
-                             data-color="${c}" data-price="${product.prices[c] || product.prices['mix']}" data-name="${COLOR_NAMES[c]}" data-img="${basePath}${c}.png" onclick="window.selectQOColor(this)">
+                             data-color="${c}" data-price="${product.prices[c] || product.prices['mix']}" data-name="${COLOR_NAMES[c]}" data-img="${basePath}${c}.webp" onclick="window.selectQOColor(this)">
                         </div>
                     `).join('')}
                 </div>
@@ -900,8 +924,8 @@ window.selectQOColor = function (dotEl) {
     document.getElementById('qo-price-unit').innerHTML = `${dotEl.dataset.price} ₽ <span style="font-size:12px; color:#999; font-weight:600;">за ед.</span>`;
     const container = document.getElementById('qo-colors-container');
     container.dataset.selectedColor = dotEl.dataset.color;
-    container.dataset.currentPrice = dotEl.dataset.price; 
-    window.updateQOTotals(); 
+    container.dataset.currentPrice = dotEl.dataset.price;
+    window.updateQOTotals();
 };
 
 window.confirmQOAdd = function (productId) {
@@ -985,10 +1009,10 @@ const appearanceObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.15 });
 
 const privatePhotos = [];
-for (let i = 1; i <= 68; i++) privatePhotos.push(`assets/img/priv/priv${i}.jpg`);
+for (let i = 1; i <= 68; i++) privatePhotos.push(`assets/img/priv/priv${i}.webp`);
 
 const publicPhotos = [];
-for (let i = 1; i <= 24; i++) publicPhotos.push(`assets/img/pub/pub${i}.jpg`);
+for (let i = 1; i <= 24; i++) publicPhotos.push(`assets/img/pub/pub${i}.webp`);
 
 const rotators = [
     { id: 'proj-img-1', pool: privatePhotos },
@@ -1013,7 +1037,6 @@ function rotateImages() {
     });
 }
 
-
 /* ==========================================================================
    БЛОК 7: ФОРМЫ (ОТПРАВКА AJAX)
    ========================================================================== */
@@ -1024,24 +1047,52 @@ function setupForm(id) {
         e.preventDefault();
         if (!navigator.onLine) { showToast('Нет интернета!', 'error'); return; }
         if (f.antispam && f.antispam.value !== "") return;
+        
         const btn = f.querySelector('button[type="submit"]') || f.querySelector('button:last-of-type');
         const old = btn.innerText;
         btn.innerText = 'Отправка...';
         btn.disabled = true;
-        fetch('send.php', { method: 'POST', body: new FormData(f) })
-            .then(r => r.json()).then(d => {
+
+        const formData = new FormData(f);
+
+        if (id === 'orderForm') {
+            if (cart.length === 0) {
+                showToast('Ваша корзина пуста!', 'error');
+                btn.innerText = old; 
+                btn.disabled = false;
+                return;
+            }
+            // ГЕНИАЛЬНЫЙ ХОД: Формируем корзину как обычный текст!
+            let plainTextCart = "";
+            let totalSum = 0;
+            cart.forEach(item => {
+                plainTextCart += `• ${item.name} (${item.color}): ${item.qty} шт. = ${item.sum} руб.\n`;
+                totalSum += item.sum;
+            });
+            plainTextCart += `\n💰 ИТОГО: ${totalSum} руб.`;
+
+            // Отправляем как обычное текстовое поле (файрвол это пропустит)
+            formData.set('orderDataText', plainTextCart);
+        }
+
+        fetch('send.php', { method: 'POST', body: formData })
+            .then(r => {
+                if (!r.ok) throw new Error('Блок от сервера: ' + r.status);
+                return r.json();
+            })
+            .then(d => {
                 btn.innerText = old; btn.disabled = false;
                 if (d.status === 'success') {
                     if (id === 'orderForm') { cart = []; saveCart(); }
                     window.location.href = "thanks.html";
                 } else { showToast('Ошибка: ' + d.message, 'error'); }
-            }).catch(() => {
+            }).catch((err) => {
+                console.error('Ошибка:', err);
                 showToast('Сбой при отправке. Пожалуйста, позвоните нам.', 'error');
                 btn.innerText = old; btn.disabled = false;
             });
     }
 }
-
 
 /* ==========================================================================
    БЛОК 8: ГЛОБАЛЬНАЯ ИНИЦИАЛИЗАЦИЯ СТРАНИЦ (DOMContentLoaded)
@@ -1197,7 +1248,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (wrap.offsetParent !== null) {
                 const btn = wrap.nextElementSibling;
                 if (btn && btn.classList.contains('js-toggle-text')) {
-                    if (wrap.scrollHeight <= 95) { wrap.classList.add('expanded'); btn.style.display = 'none'; } 
+                    if (wrap.scrollHeight <= 95) { wrap.classList.add('expanded'); btn.style.display = 'none'; }
                     else { btn.style.display = 'inline-block'; }
                 }
             }
@@ -1426,20 +1477,50 @@ document.addEventListener('DOMContentLoaded', () => {
         const gridHome = document.getElementById('newsGridHome');
         if (!gridPage && !gridHome) return;
 
-        const buildCard = (item) => `
-        <article class="news-card" data-cat="${item.category}" data-id="${item.id}">
-            <div class="news-img-wrap" onclick="window.openCert(this)" style="cursor: zoom-in;">
-                <span class="news-badge badge-${item.category}" ${item.badgeStyle ? `style="${item.badgeStyle}"` : ''}>${item.badgeText}</span>
-                <img src="${item.img}" class="news-img" loading="lazy" decoding="async" alt="${item.title}" onerror="window.handleImgError(this)">            </div>
-            <div class="news-content">
-                <span class="news-date">${item.date}</span>
-                <h3 class="news-title">${item.title}</h3>
-                <p class="news-excerpt">${item.excerpt}</p>
-                <div class="hidden-full-text" style="display:none;">${item.body}</div>
-                <button class="news-link js-read-news">Читать далее <span>→</span></button>
-            </div>
-        </article>
-        `;
+        // --- ИСПРАВЛЕННЫЙ УМНЫЙ КОД СБОРКИ КАРТОЧКИ ---
+        const buildCard = (item) => {
+            let mediaContent = '';
+            const mediaUrl = item.img;
+            let wrapperAttributes = ''; // Переменная для управления лайтбоксом
+
+            // 1. Проверяем, ссылка ли это на YouTube
+            if (mediaUrl.includes('youtu.be') || mediaUrl.includes('youtube.com')) {
+                const videoId = mediaUrl.split('/').pop().split('?')[0];
+                mediaContent = `<iframe class="news-img" src="https://www.youtube.com/embed/${videoId}?controls=1&showinfo=0&rel=0" frameborder="0" allowfullscreen style="border: none; pointer-events: auto;"></iframe>`;
+                // Для видео wrapperAttributes остается пустым (без лайтбокса)
+            }
+            // 2. Проверяем, локальное ли это видео (mp4, webm)
+            else if (mediaUrl.endsWith('.mp4') || mediaUrl.endsWith('.webm')) {
+                mediaContent = `<video class="news-img" autoplay loop muted playsinline>
+                                    <source src="${mediaUrl}" type="video/${mediaUrl.split('.').pop()}">
+                                </video>`;
+                // Для локального видео тоже без лайтбокса
+            }
+            // 3. Если это обычная картинка
+            else {
+                mediaContent = `<img src="${mediaUrl}" class="news-img" loading="lazy" decoding="async" alt="${item.title}" onerror="window.handleImgError(this)">`;
+                // ВОЗВРАЩАЕМ ЛАЙТБОКС только для обычных картинок!
+                wrapperAttributes = `onclick="window.openCert(this)" style="cursor: zoom-in;"`;
+            }
+
+            // Возвращаем собранный HTML
+            return `
+            <article class="news-card" data-cat="${item.category}" data-id="${item.id}">
+                <div class="news-img-wrap" ${wrapperAttributes}>
+                    <span class="news-badge badge-${item.category}" ${item.badgeStyle ? `style="${item.badgeStyle}"` : ''}>${item.badgeText}</span>
+                    ${mediaContent}
+                </div>
+                <div class="news-content">
+                    <span class="news-date">${item.date}</span>
+                    <h3 class="news-title">${item.title}</h3>
+                    <p class="news-excerpt">${item.excerpt}</p>
+                    <div class="hidden-full-text" style="display:none;">${item.body}</div>
+                    <button class="news-link js-read-news">Читать далее <span>→</span></button>
+                </div>
+            </article>
+            `;
+        };
+        // --- КОНЕЦ БЛОКА ---
 
         if (gridPage) gridPage.innerHTML = sortedNewsData.map(buildCard).join('');
         if (gridHome) gridHome.innerHTML = sortedNewsData.slice(0, 3).map(buildCard).join('');
@@ -1456,7 +1537,34 @@ document.addEventListener('DOMContentLoaded', () => {
             const modal = document.getElementById('newsModal');
             if (modal && card) {
                 const newsId = card.dataset.id;
-                document.getElementById('newsModalImg').src = card.querySelector('.news-img').src;
+
+                // --- НАЧАЛО: УМНАЯ ПОДМЕНА МЕДИА В МОДАЛКЕ ---
+                const oldModalMedia = document.getElementById('newsModalImg');
+                const cardMedia = card.querySelector('.news-img');
+
+                // Клонируем элемент целиком (img, video или iframe)
+                const newModalMedia = cardMedia.cloneNode(true);
+                newModalMedia.id = 'newsModalImg'; // Возвращаем ID, чтобы не сломать следующие открытия
+                newModalMedia.className = oldModalMedia.className; // Сохраняем родные классы модалки
+
+                // Настраиваем красивые пропорции в зависимости от типа контента
+                if (newModalMedia.tagName.toLowerCase() === 'iframe') {
+                    newModalMedia.style.width = '100%';
+                    newModalMedia.style.height = '350px'; // Высота для YouTube-плеера
+                    newModalMedia.style.borderRadius = '12px';
+                } else {
+                    newModalMedia.style.width = '100%';
+                    newModalMedia.style.height = 'auto';
+                    newModalMedia.style.maxHeight = '400px';
+                    newModalMedia.style.objectFit = 'cover';
+                    newModalMedia.style.borderRadius = '12px';
+                    newModalMedia.style.cursor = 'default'; // Отключаем лупу внутри самой модалки
+                }
+
+                // Магия: заменяем старый тег на наш новый клон
+                oldModalMedia.replaceWith(newModalMedia);
+                // --- КОНЕЦ: УМНАЯ ПОДМЕНА МЕДИА ---
+
                 document.getElementById('newsModalDate').innerText = card.querySelector('.news-date').innerText;
                 document.getElementById('newsModalTitle').innerText = card.querySelector('.news-title').innerText;
                 document.getElementById('newsModalBody').innerHTML = card.querySelector('.hidden-full-text').innerHTML;
@@ -1478,6 +1586,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     shareBtn.dataset.link = shareUrl;
                     window.history.replaceState(null, null, '?article=' + newsId);
                 }
+
+                // --- НАЧАЛО: ГЛУШИМ ФОНОВЫЕ ВИДЕО ---
+                // Останавливаем все YouTube-плееры в карточках (перезагружая их src)
+                document.querySelectorAll('.news-card iframe').forEach(iframe => {
+                    iframe.src = iframe.src;
+                });
+                // Ставим на паузу все локальные видео
+                document.querySelectorAll('.news-card video').forEach(video => {
+                    video.pause();
+                });
+                // --- КОНЕЦ: ГЛУШИМ ФОНОВЫЕ ВИДЕО ---
 
                 modal.classList.add('active');
                 document.body.style.overflow = 'hidden';

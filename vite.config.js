@@ -1,44 +1,46 @@
 import { defineConfig } from 'vite';
-import { resolve, dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { resolve } from 'path';
 import handlebars from 'vite-plugin-handlebars';
-
-// Настройка путей (нужна для правильной работы плагина)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
-  // Корень проекта для сборщика
-  root: 'src', 
+  // Указываем Vite, что все исходники лежат в папке src
+  root: 'src',
 
-  // ПОДКЛЮЧАЕМ ПЛАГИН ДЛЯ СБОРКИ HTML
-  plugins: [
-    handlebars({
-      // Указываем папку, где лежат наши файлы header.html, footer.html и т.д.
-      partialDirectory: resolve(__dirname, 'src/partials'),
-    }),
-  ],
-
-  // Настройки CSS (SCSS)
-  css: {
-    preprocessorOptions: {
-      scss: {
-        api: 'modern-compiler', 
+  build: {
+    // Указываем папку для готового сайта (на один уровень выше src)
+    outDir: '../dist',
+    emptyOutDir: true,
+    
+    rollupOptions: {
+      input: {
+        // Так как root: 'src', пути здесь указываем относительно src
+        main: resolve(__dirname, 'src/index.html'),
+        about: resolve(__dirname, 'src/about.html'),
+        catalog: resolve(__dirname, 'src/catalog.html'),
+        contacts: resolve(__dirname, 'src/contacts.html'),
+        news: resolve(__dirname, 'src/news.html'),
+        objects: resolve(__dirname, 'src/objects.html'),
+        partners: resolve(__dirname, 'src/partners.html'),
+        policy: resolve(__dirname, 'src/policy.html'),
+        thanks: resolve(__dirname, 'src/thanks.html'),
+        404: resolve(__dirname, 'src/404.html'),
       },
     },
   },
-  
-  // Настройки локального сервера
-  server: {
-    port: 5173,
-    open: true,
-    cors: true,
-  },
-  
-  // Настройки финальной сборки
-  build: {
-    outDir: '../dist', 
-    emptyOutDir: true,
-    minify: 'terser',
-  }
+
+  plugins: [
+    handlebars({
+      partialDirectory: resolve(__dirname, 'src/partials'),
+    }),
+
+    viteStaticCopy({
+      targets: [
+        { src: 'assets', dest: '' },
+        { src: 'data', dest: '' },
+        { src: 'robots.txt', dest: '' },
+        { src: 'send.php', dest: '' }
+      ]
+    })
+  ],
 });

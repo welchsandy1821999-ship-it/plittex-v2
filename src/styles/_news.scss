@@ -1,20 +1,36 @@
 /* ==========================================================================
    НОВОСТИ И БЛОГ, ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ
    ========================================================================== */
-
 /* --- СЕТКА НОВОСТЕЙ И КАРТОЧКИ --- */
+
+/* 1. Возвращаем сетку (чтобы новости стояли в ряд) */
 .news-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 30px;
 }
 
+/* 2. Сама карточка новости (с тенями как у объектов) */
 .news-card {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    background: #fff;
+    border-color: #ccc;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.20) !important;
+    transform: translateY(0) !important;
+    transition: 0.3s ease !important;
 }
 
+/* 3. Эффект наведения на карточку */
+.news-card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 20px 40px rgba(0, 107, 179, 0.2) !important;
+    z-index: 2;
+}
+
+/* 4. Обертка для картинки */
 .news-img-wrap {
     height: 220px;
     overflow: hidden;
@@ -26,6 +42,7 @@
     border-bottom: 1px solid var(--border-color, #eee);
 }
 
+/* 5. Само изображение */
 .news-img {
     width: 100%;
     height: 100%;
@@ -33,7 +50,10 @@
     transition: transform 0.5s ease;
 }
 
-.news-card:hover .news-img { transform: scale(1.08); }
+/* 6. Увеличение картинки при наведении */
+.news-card:hover .news-img {
+    transform: scale(1.1);
+}
 
 .news-badge {
     position: absolute;
@@ -51,9 +71,17 @@
 }
 
 /* Цвета бейджиков новостей */
-.badge-event { color: var(--primary-color); }
-.badge-project { color: var(--accent-success, #27ae60); }
-.badge-article { color: var(--accent-sale, #e67e22); }
+.badge-event {
+    color: var(--primary-color);
+}
+
+.badge-project {
+    color: var(--accent-success, #27ae60);
+}
+
+.badge-article {
+    color: var(--accent-sale, #e67e22);
+}
 
 .news-content {
     padding: 25px;
@@ -79,7 +107,9 @@
     transition: 0.2s;
 }
 
-.news-card:hover .news-title { color: var(--primary-color); }
+.news-card:hover .news-title {
+    color: var(--primary-color);
+}
 
 .news-excerpt {
     font-size: 14px;
@@ -110,9 +140,13 @@
 
 /* Скрытие элементов для JS */
 .hidden-full-text,
-.news-card.hidden { display: none; }
+.news-card.hidden {
+    display: none;
+}
 
-.news-card.fade-in { animation: fadeIn 0.5s ease forwards; }
+.news-card.fade-in {
+    animation: fadeIn 0.5s ease forwards;
+}
 
 .cta-news {
     background: var(--dark-color, #333);

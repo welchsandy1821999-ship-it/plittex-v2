@@ -186,7 +186,7 @@
 
 /* Форма в корзине */
 .drawer-form { display: flex; flex-direction: column; gap: 1px; margin-bottom: 8px; }
-.drawer-form .input-field { padding: 10px 15px;margin-bottom: 0; /* НОВОЕ: Убиваем глобальный отступ, форму сжимает gap */}
+.drawer-form .input-field { padding: 10px 15px; /* НОВОЕ: Убиваем глобальный отступ, форму сжимает gap */}
 .btn-submit-order {
     background: var(--primary-color); color: #fff; width: 100%; padding: 12px;
     border-radius: 50px; font-weight: 800; text-transform: uppercase; font-size: 14px;
@@ -280,6 +280,30 @@
 .news-modal-img {
     width: 100%; height: auto; max-height: 400px; object-fit: cover;
     border-radius: 8px; margin-bottom: 20px; cursor: pointer;
+}
+/* --- КРАСИВЫЙ ПОЛЗУНОК ДЛЯ МОДАЛЬНЫХ ОКОН --- */
+
+/* 1. Обращаемся к контейнеру, который скроллится (обычно это .modal-container) */
+.modal-container::-webkit-scrollbar {
+    width: 6px; /* Делаем ползунок тонким и изящным */
+}
+
+/* 2. Настраиваем "рельсы" (трек) ползунка */
+.modal-container::-webkit-scrollbar-track {
+    background: transparent; /* Делаем фон прозрачным */
+    margin-top: 16px; /* ВАЖНО: отодвигаем трек от верхнего угла */
+    margin-bottom: 16px; /* ВАЖНО: отодвигаем трек от нижнего угла */
+}
+
+/* 3. Настраиваем сам синий бегунок */
+.modal-container::-webkit-scrollbar-thumb {
+    background: var(--primary-color); /* Твой фирменный синий цвет */
+    border-radius: 10px; /* Полностью скругляем сам бегунок */
+}
+
+/* Эффект при наведении на сам ползунок (по желанию) */
+.modal-container::-webkit-scrollbar-thumb:hover {
+    background: #00508a; /* Чуть темнее при захвате мышкой */
 }
 
 /* ==========================================================================
